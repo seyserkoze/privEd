@@ -5,11 +5,10 @@
  * Marcus Greer (mgreer), Shaurya Khazanchi (Skhazanc)
  * March 19, 2019
  */
-
 function fillHTTPStatus(response) { 
 	var protocolElement = document.getElementById('protocolElement');
 	// console.log(response.protocol);
-	if (response == null || response.protocol != null) {
+	if (response != null && response.protocol != null) {
 		if (0 == response.protocol.localeCompare("https:")) {
 			protocolElement.innerHTML = "HTTP Status: This website is secure by SSL TLS";
 		} else if (0 == response.protocol.localeCompare("http:")){
