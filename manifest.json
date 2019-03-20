@@ -9,7 +9,7 @@
       "default_icon": "hello_extensions.png"
     },
     "background":{
-      "scripts": ["js/background.js"],
+      "scripts": ["js/jquery.js", "js/background.js"],
       "persistent": false
     },
 
@@ -19,6 +19,7 @@
         "matches": ["*://*/*"]
       }
     ],
+
     "commands": {
       "_execute_browser_action": {
         "suggested_key": {
