@@ -16,6 +16,16 @@ function checkMalicious(){
 }
 checkMalicious();
 
+
+function checkSSLCertificate() {
+	var url = "https://www.sslshopper.com/ssl-checker.html?hostname=" + location.href;
+	$.get(url, function(data){
+    	console.log(data);
+	});
+};
+checkSSLCertificate();
+
+
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 	if (request.from == "popup") {
 		switch(request.subject){
@@ -34,7 +44,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 				// TODO
 		}
 	}
-	
 });
 
 
