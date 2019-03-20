@@ -46,9 +46,7 @@ chrome.runtime.onMessage.addListener(
 
         if (request.message=="urlHausReq"){
             var url_check = '"'+request.url+'"';
-            console.log(url_check)
             if (malicious_dict[url_check]){
-                console.log('url is malicious');
                 sendResponse({threat: malicious_dict[url_check]});
             }
             else{
@@ -60,3 +58,7 @@ chrome.runtime.onMessage.addListener(
 );
 
 
+
+chrome.cookies.getAll({}, function(cookies){
+    console.log(cookies);
+});
