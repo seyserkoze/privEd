@@ -34,12 +34,18 @@ securityRecommendationSystem();
 checkMalicious();
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
+
 	if (request.subject=="urlHausRes" && request.from == "popup"){
-		console.log("popup is requesting info about URLHaus Report");
+		console.log("popup is requesting info about URLHaus");
 		sendResponse({threat: malicious_threat});
+
+	} else if (request.subject== "protocolStatusReq" && request.from == "popup") {
+		console.log("popup is requesting info about the protocol");
+		sendResponse({protocol: location.protocol});
 	}
 	
 });
+
 
 
 alert(document.cookie);

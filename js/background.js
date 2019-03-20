@@ -16,11 +16,6 @@ chrome.tabs.onCreated.addListener(function(tabs){
 
 // Upon Installation we want to have these values instantiated
 chrome.runtime.onInstalled.addListener(function() {
-    chrome.storage.sync.set({"CSPStatus": null}, null);
-    chrome.storage.sync.set({"secureHeaders": null}, null);
-    chrome.storage.sync.set({"protocolStatus": null}, null);
-
-
     //build up csv data of malicious websites from URLHaus
     $.get("https://urlhaus.abuse.ch/downloads/csv/", function(data){
         
@@ -63,3 +58,4 @@ chrome.runtime.onMessage.addListener(
         return Promise.resolve("Dummy response to keep the console quiet");
     }
 );
+
