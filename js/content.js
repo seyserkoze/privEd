@@ -7,9 +7,17 @@
  */
 
 
+function checkMalicious(){
+	chrome.runtime.sendMessage({message: "urlHausReq", url: location.href}, function(response) {
+		console.log(response.threat);
+	});
+}
+
 function securityRecommendationSystem() {
 	// Find the HTTP SSL status
 	chrome.storage.sync.set({"protocolStatus": location.protocol}, null);
 }
 securityRecommendationSystem();
 
+
+checkMalicious();
