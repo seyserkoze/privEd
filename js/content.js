@@ -14,34 +14,25 @@ function checkMalicious(){
 		malicious_threat = response.threat;
 	});
 }
-
-
-
-
-function sendThreatToPopup(){
-	chrome.runtime.sendMessage({message: "urlHausRes", threat: malicious_threat}, function(response) {
-		console.log("message to popup sent");
-	});
-}
-
-function securityRecommendationSystem() {
-	// Find the HTTP SSL status
-	chrome.storage.sync.set({"protocolStatus": location.protocol}, null);
-}
-
-
-securityRecommendationSystem();
 checkMalicious();
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
+	if (request.from == "popup") {
+		switch(request.subject){
+			
+			case "urlHausRes":
+				console.log("popup is requesting info about URLHaus");
+				sendResponse({threat: malicious_threat});
+				break;
+			
+			case "protocolStatusReq":
+				console.log("popup is requesting info about the protocol");
+				sendResponse({protocol: location.protocol});
+				break;
 
-	if (request.subject=="urlHausRes" && request.from == "popup"){
-		console.log("popup is requesting info about URLHaus");
-		sendResponse({threat: malicious_threat});
-
-	} else if (request.subject== "protocolStatusReq" && request.from == "popup") {
-		console.log("popup is requesting info about the protocol");
-		sendResponse({protocol: location.protocol});
+			default:
+				// TODO
+		}
 	}
 	
 });

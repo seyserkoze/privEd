@@ -1,14 +1,21 @@
 /* PrivEd: Browser Security Final Project
  *
- * popup.js: Scripts that are relevant to the popup html page
+ * @file: popup.js
+ * @description: Scripts that are relevant to creating the popup html page
  * 
  * Marcus Greer (mgreer), Shaurya Khazanchi (Skhazanc)
  * March 19, 2019
  */
 
+
+/* fillHTTPStatus:
+ * @description: takes the data diven from consent.js and uses that data to write to popup.html's
+ *					protocolElement div
+ * @input: response - the data given to popup.js from the 
+ * @output: void
+ */
 function fillHTTPStatus(response) { 
 	var protocolElement = document.getElementById('protocolElement');
-	// console.log(response.protocol);
 	if (response != null && response.protocol != null) {
 		if (0 == response.protocol.localeCompare("https:")) {
 			protocolElement.innerHTML = "HTTP Status: This website is secure by SSL TLS";
@@ -23,11 +30,21 @@ function fillHTTPStatus(response) {
 	}
 }
 
-
+/* fillUrlHaus:
+ * @description: takes the data diven from consent.js and uses that data to write to popup.html's
+ *					urlHaus div
+ * @input: response - the data given to popup.js from the 
+ * @output: void
+ */
 function fillUrlHaus(response) {
 	var urlHausHtml = document.getElementById("urlHaus");
 	console.log(urlHausHtml);
-	urlHausHtml.innerText = response.threat;
+	if (response != null && response.threat != null) {
+		urlHausHtml.innerText = response.threat;
+	} else {
+		// error handling
+		urlHausHtml.innerText = "threat status: N/A";
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
