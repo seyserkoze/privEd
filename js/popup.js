@@ -27,14 +27,7 @@ function fillHTTPStatus(response) {
 function fillUrlHaus(response) {
 	var urlHausHtml = document.getElementById("urlHaus");
 	console.log(urlHausHtml);
-
-	chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
-		chrome.tabs.sendMessage(tabs[0].id, {from: 'popup', subject: 'urlHausRes'}, function(response){
-			urlHausHtml.innerText = response.threat;
-		})
-	});
 	urlHausHtml.innerText = response.threat;
-
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
