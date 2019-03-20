@@ -5,14 +5,7 @@
  * Marcus Greer (mgreer), Shaurya Khazanchi (Skhazanc)
  * March 19, 2019
  */
-<<<<<<< HEAD
- 
-// var protocolStatus = document.getElementById('protocolStatus');
-// chrome.storage.sync.get('protocolStatus', function(data) {
-// 		protocolStatus.innerHTML = data.protocolStatus;
-// });
 
-=======
 function fillHTTPStatus(response) { 
 	var protocolElement = document.getElementById('protocolElement');
 	// console.log(response.protocol);
@@ -29,26 +22,20 @@ function fillHTTPStatus(response) {
 		protocolElement.innerHTML = "HTTP Status: N/A";
 	}
 }
->>>>>>> 0d84fceaaea9fac7e7a4768f639738bd7725f610
+
 
 function fillUrlHaus(response) {
 	var urlHausHtml = document.getElementById("urlHaus");
 	console.log(urlHausHtml);
-<<<<<<< HEAD
 
 	chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
 		chrome.tabs.sendMessage(tabs[0].id, {from: 'popup', subject: 'urlHausRes'}, function(response){
 			urlHausHtml.innerText = response.threat;
 		})
 	});
-=======
 	urlHausHtml.innerText = response.threat;
->>>>>>> 0d84fceaaea9fac7e7a4768f639738bd7725f610
+
 }
-
-
-
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 window.onload = function(){
