@@ -8,7 +8,18 @@
  
 var protocolStatus = document.getElementById('protocolStatus');
 chrome.storage.sync.get('protocolStatus', function(data) {
-		console.log(data.protocolStatus);
 		protocolStatus.innerHTML = data.protocolStatus;
 });
 
+
+window.onload = function(){
+	var urlHausHtml = document.getElementById("urlHaus");
+	console.log(urlHausHtml);
+
+	chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+		chrome.tabs.sendMessage(tabs[0].id, {from: 'popup', subject: 'urlHausRes'}, function(response){
+			console.log(response);
+	    	urlHausHtml.innerText = response.threat;
+		})
+	});
+}
