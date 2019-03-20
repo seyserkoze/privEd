@@ -6,10 +6,10 @@
  * March 19, 2019
  */
  
-var protocolStatus = document.getElementById('protocolStatus');
-chrome.storage.sync.get('protocolStatus', function(data) {
-		protocolStatus.innerHTML = data.protocolStatus;
-});
+// var protocolStatus = document.getElementById('protocolStatus');
+// chrome.storage.sync.get('protocolStatus', function(data) {
+// 		protocolStatus.innerHTML = data.protocolStatus;
+// });
 
 
 window.onload = function(){
@@ -18,8 +18,7 @@ window.onload = function(){
 
 	chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
 		chrome.tabs.sendMessage(tabs[0].id, {from: 'popup', subject: 'urlHausRes'}, function(response){
-			console.log(response);
-	    	urlHausHtml.innerText = response.threat;
+			urlHausHtml.innerText = response.threat;
 		})
 	});
 }
