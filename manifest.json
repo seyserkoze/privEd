@@ -3,10 +3,22 @@
     "description" : "A privacy literacy Chrome Extension",
     "version": "1.0",
     "manifest_version": 2,
+    "permissions": ["storage", "declarativeContent", "activeTab", "*://*/*", "tabs"],
     "browser_action": {
       "default_popup": "index.html",
       "default_icon": "hello_extensions.png"
     },
+    "background":{
+      "scripts": ["js/background.js"],
+      "persistent": false
+    },
+
+    "content_scripts": [
+      {
+        "js": ["js/content.js"],
+        "matches": ["*://*/*"]
+      }
+    ],
     "commands": {
       "_execute_browser_action": {
         "suggested_key": {
