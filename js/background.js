@@ -8,6 +8,28 @@
 
 var malicious_dict = {};
 var tabDomain;
+var outputVar;
+var adv;
+var social;
+var trackers;
+
+function readTextFile(file)
+{
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file, false);
+    rawFile.onreadystatechange = function ()
+    {
+        if(rawFile.readyState === 4)
+        {
+            if(rawFile.status === 200 || rawFile.status == 0)
+            {   
+
+                outputVar = rawFile.responseText;
+            }
+        }
+    }
+    rawFile.send(null);
+}
 
 
 //url1 is the cookie url and url2 is the hostname
@@ -45,8 +67,36 @@ function buildThirdPartyCookies(cookies){
             }
         }
     }
-    console.log(thirdPartySet);
+
     return thirdPartySet;
+}
+
+function segmentSet(cookieSet){
+
+    var advSet=[];
+    var socSet=[];
+    var trackSet=[];
+    console.log(trackers);
+    for (var elem in cookieSet){
+        var elemCopy = elem;
+        if (elem[0]=="."){
+            elem= elem.substring(1, elem.length);
+        }
+        if (adv.includes(elem)){
+            advSet.push(cookieSet[elemCopy]);
+        }
+
+        else if (social.includes(elem)){
+            socSet.push(cookieSet[elemCopy]);
+        }
+
+        else if (trackers.includes(elem)){
+            trackSet.push(cookieSet[elemCopy]);
+        }
+    }
+
+    console.log(advSet, socSet, trackSet);
+    return null;
 }
 
 function buildCookieList(){
@@ -70,13 +120,26 @@ function buildCookieList(){
         ];
 
         // do something with the cookies here
-        buildThirdPartyCookies(cookies);
+        var thirdPartySet = buildThirdPartyCookies(cookies);
+
+        var sendSet = segmentSet(thirdPartySet);
+
       });
     });    
 }
 
 // Upon Installation we want to have these values instantiated
 chrome.runtime.onInstalled.addListener(function() {
+
+
+    //build up all the lists from db set 
+    readTextFile('../texts/adv');
+    adv = outputVar.split('\n');
+    readTextFile('../texts/social');
+    social = outputVar.split('\n');
+    readTextFile('../texts/trackers');
+    trackers = outputVar.split('\n');
+
     //build up csv data of malicious websites from URLHaus
     $.get("https://urlhaus.abuse.ch/downloads/csv/", function(data){
         
