@@ -178,9 +178,17 @@ chrome.runtime.onMessage.addListener(
             var url_check = '"'+request.url+'"';
             if (malicious_dict[url_check]){
                 sendResponse({threat: malicious_dict[url_check]});
+                chrome.browserAction.setIcon({
+            		path: "images/frown.svg", // frown.png
+            		tabId: sender.tab.id
+        		});
             }
             else{
                 sendResponse({threat: 'No Threat Detected'});
+                chrome.browserAction.setIcon({
+            		path: "images/smile.svg", // smile.png
+            		tabId: sender.tab.id
+        		});
             }
         }
 

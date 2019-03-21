@@ -48,9 +48,9 @@ function fillUrlHaus(response) {
 }
 
 
-/* fillUrlHaus:
+/* fillCertificateStatus:
  * @description: takes the data diven from consent.js and uses that data to write to popup.html's
- *					urlHaus div
+ *					sslCertificate div
  * @input: response - the data given to popup.js from the 
  * @output: void
  */
