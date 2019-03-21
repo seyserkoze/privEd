@@ -17,13 +17,21 @@ function checkMalicious(){
 checkMalicious();
 
 
-function checkSSLCertificate() {
-	var url = "https://www.sslshopper.com/ssl-checker.html?hostname=" + location.href;
-	$.get(url, function(data){
-    	console.log(data);
-	});
-};
-checkSSLCertificate();
+window.onload = function(){
+	function checkSSLCertificate() {
+		var url = "https://www.sslshopper.com/ssl-checker.html#hostname=" + location.href;
+		console.log(url)
+		$.get(url, function(data){
+	    	console.log(data);
+		});
+	};
+
+	checkSSLCertificate();
+
+}
+
+
+
 
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
