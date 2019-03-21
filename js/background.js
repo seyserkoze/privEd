@@ -7,12 +7,73 @@
  */
 
 var malicious_dict = {};
+var tabDomain;
 
-chrome.tabs.onCreated.addListener(function(tabs){
- 	chrome.tabs.executeScript({
-		file: 'js/content.js'
-	});
-})
+
+//url1 is the cookie url and url2 is the hostname
+//needs to be modified acc to needs later
+function isSubDomain(url1, url2){
+    url2 = url2.toString();
+    if (url1===url2){
+        return true;
+    }
+    else if (url2.includes(url1)){
+        return true;
+    }
+    return false;
+}
+
+function buildThirdPartyCookies(cookies){  
+    var thirdPartySet = {};
+
+    for (i=0; i<cookies.length; i++){
+        var currDomain = cookies[i].domain;
+        if (currDomain[0]=="."){
+             currDomain= currDomain.substring(1, currDomain.length);
+        }
+
+        var wwwInd = currDomain.indexOf('www.')
+        
+        if (wwwInd>-1){
+            currDomain = currDomain.substring(wwwInd+4, currDomain.length);
+            console.log(currDomain);
+        }
+        
+        if (!isSubDomain(currDomain, tabDomain)){
+            if (!(thirdPartySet[cookies[i].domain] )){
+                thirdPartySet[cookies[i].domain] = cookies[i];
+            }
+        }
+    }
+    console.log(thirdPartySet);
+    return thirdPartySet;
+}
+
+function buildCookieList(){
+    chrome.tabs.executeScript({code: 'performance.getEntriesByType("resource").map(e => e.name)',}, data => {
+        if (chrome.runtime.lastError || !data || !data[0]) return;
+        const urls = data[0].map(url => url.split(/[#?]/)[0]);
+        const uniqueUrls = [...new Set(urls).values()].filter(Boolean);
+        Promise.all(
+        uniqueUrls.map(url =>
+          new Promise(resolve => {
+            chrome.cookies.getAll({url}, resolve);
+          })
+        )
+      ).then(results => {
+        // convert the array of arrays into a deduplicated flat array of cookies
+        const cookies = [
+          ...new Map(
+            [].concat(...results)
+              .map(c => [JSON.stringify(c), c])
+          ).values()
+        ];
+
+        // do something with the cookies here
+        buildThirdPartyCookies(cookies);
+      });
+    });    
+}
 
 // Upon Installation we want to have these values instantiated
 chrome.runtime.onInstalled.addListener(function() {
@@ -53,12 +114,16 @@ chrome.runtime.onMessage.addListener(
                 sendResponse({threat: 'No Threat Detected'});
             }
         }
+
+        else if (request.message=="domain"){
+            tabDomain = request.url.toString();
+            var wwwIndex = tabDomain.indexOf('www.');
+           
+            if (wwwIndex>-1){
+                tabDomain = tabDomain.substring(wwwIndex+4, tabDomain.length);
+            }
+            buildCookieList();      
+        }
         return Promise.resolve("Dummy response to keep the console quiet");
     }
 );
-
-
-
-chrome.cookies.getAll({}, function(cookies){
-    console.log(cookies);
-});

@@ -3,7 +3,7 @@
     "description" : "A privacy literacy Chrome Extension",
     "version": "1.0",
     "manifest_version": 2,
-    "permissions": ["storage", "declarativeContent", "activeTab", "*://*/*", "tabs", "cookies"],
+    "permissions": ["storage", "declarativeContent", "activeTab", "*://*/*", "tabs", "cookies", "webNavigation"],
     "browser_action": {
       "default_popup": "popup.html",
       "default_icon": "hello_extensions.png"

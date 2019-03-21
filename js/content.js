@@ -9,29 +9,27 @@
 
 var malicious_threat;
 
-function checkMalicious(){
+function sendToBackgroud(){
 	chrome.runtime.sendMessage({message: "urlHausReq", url: location.href}, function(response) {
 		malicious_threat = response.threat;
 	});
+
+	chrome.runtime.sendMessage({message: "domain", url: location.hostname}, function(response) {
+		console.log(location.hostname)
+	});
 }
-checkMalicious();
+
+function checkSSLCertificate() {
+	var url = "https://www.sslshopper.com/ssl-checker.html";
+	$.get(url,{search_box: 'www.facebook.com'}, function(data){
+	});
+};
 
 
 window.onload = function(){
-	function checkSSLCertificate() {
-		var url = "https://www.sslshopper.com/ssl-checker.html#hostname=" + location.href;
-		console.log(url)
-		$.get(url, function(data){
-	    	console.log(data);
-		});
-	};
-
 	checkSSLCertificate();
-
+	sendToBackgroud();
 }
-
-
-
 
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
