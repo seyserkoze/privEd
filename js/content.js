@@ -17,17 +17,25 @@ function checkMalicious(){
 checkMalicious();
 
 
+var validity_window;
 window.onload = function(){
 	function checkSSLCertificate() {
 
-		var url = location.href;
+		var url = window.location.hostname;
 		url = (url[url.length-1] == "/") ? url.substring(0, url.length - 1) : url;
 		var payload= {r: 126, 
 					  host: url}
 		console.log(payload);
 		$.post("https://www.digicert.com/api/check-host.php", payload)
 			.done(function(data){
-				console.log(data);
+				// console.log(data);
+				var parser = new DOMParser();
+				var htmlDoc = parser.parseFromString(data, 'text/html');
+
+				const TDs = htmlDoc.getElementsByTagName("td");
+				validity_window = TDs[17].innerText;
+				console.log(validity_window);
+				
 			});
 	}
 	checkSSLCertificate();
@@ -46,6 +54,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 			case "protocolStatusReq":
 				console.log("popup is requesting info about the protocol");
 				sendResponse({protocol: location.protocol});
+				break;
+
+			case "sslCertificateReq":
+				console.log("popup is requesting info about the SSL Certificate");
+				sendResponse({sslCertificate: validity_window});
 				break;
 
 			default:
