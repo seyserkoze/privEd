@@ -65,9 +65,22 @@ function fillCertificateStatus(response) {
 	}
 }
 
+
+//get message from background script
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
+	if (request.msg=="cookieList"){
+		console.log(request.data.advSet);
+		console.log(request.data.trackSet);
+		console.log(request.data.socSet);
+
+	}
+})
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 window.onload = function(){
 
+
+	
 	chrome.tabs.query({ active: true, currentWindow: true}, 
     	function (tabs) {
 
