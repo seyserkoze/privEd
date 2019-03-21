@@ -139,13 +139,14 @@ chrome.runtime.onInstalled.addListener(function() {
 
 
     //build up all the lists from db set 
+    console.log(adv);
     readTextFile('../texts/adv');
     adv = outputVar.split('\n');
     readTextFile('../texts/social');
     social = outputVar.split('\n');
     readTextFile('../texts/trackers');
     trackers = outputVar.split('\n');
-
+    console.log(trackers);
 
     //build up csv data of malicious websites from URLHaus
     $.get("https://urlhaus.abuse.ch/downloads/csv/", function(data){
