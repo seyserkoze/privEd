@@ -95,8 +95,14 @@ function segmentSet(cookieSet){
         }
     }
 
-    console.log(advSet, socSet, trackSet);
-    return null;
+    chrome.runtime.sendMessage({
+        msg: "cookieList",
+        data: {
+            advSet: advSet,
+            socSet: socSet,
+            trackSet: trackSet
+        }
+    })
 }
 
 function buildCookieList(){
@@ -122,7 +128,7 @@ function buildCookieList(){
         // do something with the cookies here
         var thirdPartySet = buildThirdPartyCookies(cookies);
 
-        var sendSet = segmentSet(thirdPartySet);
+        segmentSet(thirdPartySet);
 
       });
     });    
