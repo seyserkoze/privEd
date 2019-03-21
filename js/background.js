@@ -173,14 +173,14 @@ chrome.runtime.onMessage.addListener(
             if (malicious_dict[url_check]){
                 sendResponse({threat: malicious_dict[url_check]});
                 chrome.browserAction.setIcon({
-            		path: "images/frown.svg", // frown.png
+            		path: "images/red2.png", // frown.png
             		tabId: sender.tab.id
         		});
             }
             else{
                 sendResponse({threat: 'No Threat Detected'});
                 chrome.browserAction.setIcon({
-            		path: "images/smile.svg", // smile.png
+            		path: "images/green2.png", // smile.png
             		tabId: sender.tab.id
         		});
             }
