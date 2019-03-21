@@ -47,6 +47,24 @@ function fillUrlHaus(response) {
 	}
 }
 
+
+/* fillUrlHaus:
+ * @description: takes the data diven from consent.js and uses that data to write to popup.html's
+ *					urlHaus div
+ * @input: response - the data given to popup.js from the 
+ * @output: void
+ */
+function fillCertificateStatus(response) {
+	var sslCertificateHTML = document.getElementById("sslCertificate");
+	console.log(sslCertificateHTML);
+	if (response != null && response.sslCertificate != null) {
+		sslCertificateHTML.innerText = response.sslCertificate;
+	} else {
+		// error handling
+		sslCertificateHTML.innerText = "SSL Certificate Status: N/A";
+	}
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 window.onload = function(){
 
@@ -64,6 +82,11 @@ window.onload = function(){
     			tabs[0].id, 
     			{from: 'popup', subject: 'urlHausRes'}, 
     			fillUrlHaus);
+
+    		chrome.tabs.sendMessage(
+    			tabs[0].id, 
+    			{from: 'popup', subject: 'sslCertificateReq'}, 
+    			fillCertificateStatus);
     	});
 };
 
