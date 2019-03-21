@@ -34,7 +34,7 @@ function checkSSLCertificate() {
 			var htmlDoc = parser.parseFromString(data, 'text/html');
 
 			const TDs = htmlDoc.getElementsByTagName("td");
-			validity_window = TDs[17].innerText;
+			validity_window = "Certificate is " + TDs[17].innerText;
 			console.log(validity_window);
 		});
 }
