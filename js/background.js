@@ -83,15 +83,15 @@ function segmentSet(cookieSet){
             elem= elem.substring(1, elem.length);
         }
         if (adv.includes(elem)){
-            advSet.push(cookieSet[elemCopy]);
+            advSet.push(elem);
         }
 
         else if (social.includes(elem)){
-            socSet.push(cookieSet[elemCopy]);
+            socSet.push(elem);
         }
 
         else if (trackers.includes(elem)){
-            trackSet.push(cookieSet[elemCopy]);
+            trackSet.push(elem);
         }
     }
 

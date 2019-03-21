@@ -8,6 +8,12 @@
  */
 
 
+
+var advSet;
+var socSet;
+var trackSet;
+
+
 /* fillHTTPStatus:
  * @description: takes the data diven from consent.js and uses that data to write to popup.html's
  *					protocolElement div
@@ -69,10 +75,9 @@ function fillCertificateStatus(response) {
 //get message from background script
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 	if (request.msg=="cookieList"){
-		console.log(request.data.advSet);
-		console.log(request.data.trackSet);
-		console.log(request.data.socSet);
-
+		advSet= request.data.advSet;
+		trackSet=request.data.trackSet;
+		socSet=request.data.socSet;
 	}
 })
 
@@ -80,7 +85,14 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 window.onload = function(){
 
 
-	
+	var advHTMl = document.getElementById('advSet');
+	var socHTML = document.getElementById('socSet');
+	var trackHTML = document.getElementById('trackSet');
+
+	advHTMl.innerText = advSet;
+	socHTML.innerText = socSet;
+	trackHTML.innerText = trackSet;
+
 	chrome.tabs.query({ active: true, currentWindow: true}, 
     	function (tabs) {
 
