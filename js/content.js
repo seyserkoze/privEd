@@ -36,7 +36,6 @@ function checkSSLCertificate() {
 			const TDs = htmlDoc.getElementsByTagName("td");
 			validity_window = TDs[17].innerText;
 			console.log(validity_window);
-			
 		});
 }
 
