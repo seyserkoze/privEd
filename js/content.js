@@ -2,7 +2,7 @@
  *
  * content.js: Scripts to run in the context of the web pages
  * 
- * Marcus Greer (mgreer), Shaurya Khazanchi (Skhazanc)
+ * Marcus Greer (mgreer), Shaurya Khazanchi (skhazanc)
  * March 19, 2019
  */
 
@@ -18,11 +18,17 @@ checkMalicious();
 
 
 function checkSSLCertificate() {
-	var url = "https://www.sslshopper.com/ssl-checker.html?hostname=" + location.href;
-	$.get(url, function(data){
-    	console.log(data);
-	});
-};
+
+	var url = location.href;
+	url = (url[url.length-1] == "/") ? url.substring(0, url.length - 1) : url;
+	var payload= {r: 126, 
+				  host: url}
+	console.log(payload);
+	$.post("https://www.digicert.com/api/check-host.php", payload)
+		.done(function(data){
+			console.log(data);
+		});
+}
 checkSSLCertificate();
 
 
