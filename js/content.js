@@ -17,19 +17,21 @@ function checkMalicious(){
 checkMalicious();
 
 
-function checkSSLCertificate() {
+window.onload = function(){
+	function checkSSLCertificate() {
 
-	var url = location.href;
-	url = (url[url.length-1] == "/") ? url.substring(0, url.length - 1) : url;
-	var payload= {r: 126, 
-				  host: url}
-	console.log(payload);
-	$.post("https://www.digicert.com/api/check-host.php", payload)
-		.done(function(data){
-			console.log(data);
-		});
+		var url = location.href;
+		url = (url[url.length-1] == "/") ? url.substring(0, url.length - 1) : url;
+		var payload= {r: 126, 
+					  host: url}
+		console.log(payload);
+		$.post("https://www.digicert.com/api/check-host.php", payload)
+			.done(function(data){
+				console.log(data);
+			});
+	}
+	checkSSLCertificate();
 }
-checkSSLCertificate();
 
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
