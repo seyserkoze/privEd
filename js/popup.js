@@ -78,6 +78,15 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 		advSet= request.data.advSet;
 		trackSet=request.data.trackSet;
 		socSet=request.data.socSet;
+		console.log(advSet, socSet, trackSet);
+		
+		var advHTMl = document.getElementById('advSet');
+		var socHTML = document.getElementById('socSet');
+		var trackHTML = document.getElementById('trackSet');
+
+		advHTMl.innerText = advSet;
+		socHTML.innerText = socSet;
+		trackHTML.innerText = trackSet;
 	}
 })
 
@@ -85,13 +94,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 window.onload = function(){
 
 
-	var advHTMl = document.getElementById('advSet');
-	var socHTML = document.getElementById('socSet');
-	var trackHTML = document.getElementById('trackSet');
-
-	advHTMl.innerText = advSet;
-	socHTML.innerText = socSet;
-	trackHTML.innerText = trackSet;
+	
 
 	chrome.tabs.query({ active: true, currentWindow: true}, 
     	function (tabs) {

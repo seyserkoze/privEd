@@ -76,7 +76,7 @@ function segmentSet(cookieSet){
     var advSet=[];
     var socSet=[];
     var trackSet=[];
-    console.log(trackers);
+
     for (var elem in cookieSet){
         var elemCopy = elem;
         if (elem[0]=="."){
@@ -146,6 +146,7 @@ chrome.runtime.onInstalled.addListener(function() {
     readTextFile('../texts/trackers');
     trackers = outputVar.split('\n');
 
+
     //build up csv data of malicious websites from URLHaus
     $.get("https://urlhaus.abuse.ch/downloads/csv/", function(data){
         
@@ -177,14 +178,15 @@ chrome.runtime.onMessage.addListener(
         if (request.message=="urlHausReq"){
             var url_check = '"'+request.url+'"';
             if (malicious_dict[url_check]){
-                sendResponse({threat: malicious_dict[url_check]});
+                var threatMsg = "URLHaus detected this website is malicious because of" + malicious_dict[url_check]
+                sendResponse({threat: threatMsg});
                 chrome.browserAction.setIcon({
             		path: "images/red2.png", // frown.png
             		tabId: sender.tab.id
         		});
             }
             else{
-                sendResponse({threat: 'No Threat Detected'});
+                sendResponse({threat: 'No Threat Detected According to URLHaus'});
                 chrome.browserAction.setIcon({
             		path: "images/green2.png", // smile.png
             		tabId: sender.tab.id
