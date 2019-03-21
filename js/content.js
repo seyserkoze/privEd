@@ -41,7 +41,6 @@ function checkSSLCertificate() {
 
 
 window.onload = function(){
-
 	checkSSLCertificate();
 	sendToBackgroud();
 }
