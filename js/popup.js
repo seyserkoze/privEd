@@ -72,6 +72,23 @@ function fillCertificateStatus(response) {
 }
 
 
+/* fillUrlRating:
+ * @description: takes the data diven from consent.js and uses that data to write to popup.html's
+ *					sslCertificate div
+ * @input: response - the data given to popup.js from the 
+ * @output: void
+ */
+function fillUrlRating(response) {
+	var urlRating = document.getElementById("urlRating");
+	var url = null;
+	if (response != null && response.url != null) {
+		url = response.url;
+	}
+
+
+}
+
+
 //get message from background script
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 	if (request.msg=="cookieList"){
@@ -92,20 +109,24 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 window.onload = function(){
-
-
-	
+	$.get("http://google.com", function( data ) {
+		console.log('hi from google');
+	});
+	$.get("128.237.219.76:8000/URLAssociations/", function( data ) {
+		console.log('hi from shaurya');
+  		console.log(data);
+	});
 
 	chrome.tabs.query({ active: true, currentWindow: true}, 
     	function (tabs) {
 
-    		// Send message to popup.js about protocol Status
+    		// Send message to content.js about protocol Status
     		chrome.tabs.sendMessage(
         		tabs[0].id,
         		{from: 'popup', subject: 'protocolStatusReq'},
         		fillHTTPStatus);
 
-    		// Send message to popup.js about the urlHaus results
+    		// Send message to content.js about the urlHaus results
     		chrome.tabs.sendMessage(
     			tabs[0].id, 
     			{from: 'popup', subject: 'urlHausRes'}, 
@@ -115,6 +136,11 @@ window.onload = function(){
     			tabs[0].id, 
     			{from: 'popup', subject: 'sslCertificateReq'}, 
     			fillCertificateStatus);
+
+    		chrome.tabs.sendMessage(
+    			tabs[0].id, 
+    			{from: 'popup', subject: 'urlReq'}, 
+    			fillUrlRating);
     	});
 };
 

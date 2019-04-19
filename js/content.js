@@ -8,8 +8,8 @@
 
 
 var malicious_threat;
-
 var validity_window;
+
 function sendToBackgroud(){
 	chrome.runtime.sendMessage({message: "urlHausReq", url: location.href}, function(response) {
 		malicious_threat = response.threat;
@@ -43,6 +43,10 @@ function checkSSLCertificate() {
 window.onload = function(){
 	checkSSLCertificate();
 	sendToBackgroud();
+	$.get("128.237.219.76:8000/URLAssociations/", function( data ) {
+		console.log('hi from shaurya');
+  		console.log(data);
+	});
 }
 
 
@@ -63,6 +67,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 			case "sslCertificateReq":
 				console.log("popup is requesting info about the SSL Certificate");
 				sendResponse({sslCertificate: validity_window});
+				break;
+
+			case "urlReq":
+				console.log("popup is requesting info about the the URL");
+				sendResponse({url: window.location.hostname});
 				break;
 
 			default:
