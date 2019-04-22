@@ -26,17 +26,41 @@ h1 {
 }
 
 
-table {
-	background-color: lightblue;
-	width: 100%;
-	height: 30px;
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: lightblue;
+  width:100%;
 }
 
-
-td {
-	padding-left: 15%;
+/* Style the buttons that are used to open the tab content */
+.tab div {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  width: 44.6%;
+  transition: 0.3s;
+  display: inline-block;
+  text-align: center;
 }
 
-td:hover{
-	background-color: dodgerblue;
+/* Change background color of buttons on hover */
+.tab div:hover {
+  background-color: dodgerblue;
+}
+
+/* Create an active/current tablink class */
+.tab div.active {
+  background-color: dodgerblue;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
 }
