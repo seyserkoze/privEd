@@ -128,7 +128,7 @@ function fillUrlRating(response) {
 }
 
 function fillTrackers(response) {
-	if (response.msg=="cookieList"){
+	if (response.subject=="cookieList"){
 		advSet= response.data.advSet;
 		trackSet=response.data.trackSet;
 		socSet=response.data.socSet;
@@ -155,9 +155,9 @@ function fillFromContent(response) {
 	var urlElement = document.getElementById("urlElement");
 	var urlRatingElement = document.getElementById("urlRatingElement");
 	
-	if (response != null && response.url != null) {
-		urlElement.innerText = "URL: " + response.url;
-		pageUrl = response.url.replace(/\./g, "");
+	if (response != null && response.hostname != null) {
+		urlElement.innerText = "URL: " + response.hostnamel;
+		pageUrl = response.hostname.replace(/\./g, "");
 
 		var requestURL = urlAssociations + pageUrl + "/";
 		$.get(requestURL, function( data ) {
@@ -185,17 +185,17 @@ function fillFromContent(response) {
 
 
 	/* send messages to background */
-	// Send message to background.js about the urlHaus results
-    chrome.runtime.sendMessage(
-    	{
-        	from: 'popup', 
-        	to: 'background',
-        	href: response.href,
-    		subject: 'urlHausRes'
-    	}, 
-    	fillUrlHaus);
-    	
-   	// Send message to background.js about the response hostname
+	// Send message to background.js about the sslCertificate
+   	chrome.runtime.sendMessage(
+   		{
+    		from: 'popup', 
+       		to: 'background',
+    		hostname: response.hostname,
+   			subject: 'sslCertificateReq'
+  		}, 
+ 		fillCertificateStatus);
+
+   	// Send message to background.js about the trackers hostname
   	chrome.runtime.sendMessage(
    		{
     		from: 'popup', 
@@ -205,15 +205,19 @@ function fillFromContent(response) {
   		}, 
  		fillTrackers);
 
-   	// Send message to background.js about the sslCertificate
-   	chrome.runtime.sendMessage(
-   		{
-    		from: 'popup', 
-       		to: 'background',
-    		hostname: response.hostname,
-   			subject: 'sslCertificateReq'
-  		}, 
- 		fillCertificateStatus);
+	// Send message to background.js about the urlHaus results
+    chrome.runtime.sendMessage(
+    	{
+        	from: 'popup', 
+        	to: 'background',
+        	href: response.href,
+    		subject: 'urlHausReq'
+    	}, 
+    	fillUrlHaus);
+    	
+
+
+
 
 }
 
