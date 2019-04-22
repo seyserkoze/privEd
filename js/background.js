@@ -125,6 +125,7 @@ function buildCookieList(){
           ).values()
         ];
 
+        console.log(cookies)
         // do something with the cookies here
         var thirdPartySet = buildThirdPartyCookies(cookies);
 

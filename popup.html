@@ -1,13 +1,27 @@
 <html>
 	<head> 
-		<script src="js/popup.js"></script>
     <script src="js/jquery.js"></script>
+		<script src="js/popup.js"></script>
+    <script src="js/style.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles.css">
 	</head>
     <body>
-     	<h1>PrivEd</h1><br>
+      <div id="header">
+     	  <h1>PrivEd</h1><br>
+      </div>
+        <br>
+        <div id="urlHaus"></div><br><br>
+
+        <div id="menuTab">
+          <table>
+            <td id="cert"> Certificate Info </td>
+            <td id="track"> Tracking Info </td>
+          </table>
+        </div>
+
       	<div id="protocolElement"></div><br>
       	<div id="sslCertificate"></div><br>
-      	<div id="urlHaus"></div><br><br>
+      	
         <div id="urlRating"></div><br>
         <button id="thumbsUp" type="button">Thumbs Up</button>
         <button id="thumbsDown" type="button">Thumbs Down</button>
