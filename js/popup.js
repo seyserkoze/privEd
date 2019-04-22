@@ -12,10 +12,9 @@
 var advSet;
 var socSet;
 var trackSet;
-var serverProtocol = "http://";
-var serverIP = "128.237.219.76";
-var serverChannel = "8000";
-var requestURL = serverProtocol + serverIP + ":" + serverChannel;  "/URLAssociations/" + pageUrl + "/";
+var serverIP = "http://128.237.126.20";
+var serverPort = "8000";
+var urlAssociations = serverIP + ":" + serverPort + "/URLAssociations/";
 
 var pageUrl = null;
 var urlRatingData = null;
@@ -27,6 +26,8 @@ function thumbs(){
     		"rating" : urlRatingData + 1
 		}
 		var request = new XMLHttpRequest();
+		var requestURL = urlAssociations + pageUrl + "/";
+		console.log(requestURL);
 		request.open('PATCH', requestURL, false);
 		request.setRequestHeader("Content-type","application/json");
 		request.send(JSON.stringify(patch));
@@ -34,19 +35,16 @@ function thumbs(){
 	}
 
 	document.getElementById("thumbsDown").onclick = function() {
-		// GET REQUEST
-		$.get(requestURL, function( data ) {
-			rating = urlRatingData;
-		});
-
 		// PATCH Request
 		var patch = {
-    		"rating" : rating - 1
+    		"rating" : urlRatingData - 1
 		}
 		var request = new XMLHttpRequest();
+		var requestURL = urlAssociations + pageUrl + "/";
 		request.open('PATCH', requestURL, false);
 		request.setRequestHeader("Content-type","application/json");
 		request.send(JSON.stringify(patch));
+		console.log("PATCH SUCCESS");
 	}
 }
 
@@ -116,14 +114,16 @@ function fillCertificateStatus(response) {
  * @output: void
  */
 function fillUrlRating(response) {
-	var urlRating = document.getElementById("urlRating");
+	var urlElement = document.getElementById("urlElement");
+	var urlRatingElement = document.getElementById("urlRatingElement");
 	if (response != null && response.url != null) {
-		urlRating.innerText = response.url;
+		urlElement.innerText = "URL: " + response.url;
 		pageUrl = response.url.replace(/\./g, "");
 
+		var requestURL = urlAssociations + pageUrl + "/";
 		$.get(requestURL, function( data ) {
 			urlRatingData = data.rating;
-			urlRating.innerText = urlRatingData;
+			urlRatingElement.innerText = "URL Rating: " + urlRatingData;
 		});
 
 	}
