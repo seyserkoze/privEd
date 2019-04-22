@@ -150,6 +150,7 @@ function fillTrackers(response) {
 
 
 function fillFromContent(response) {
+	console.log(response);
 
 	/* Fill the URL rating from Content.js' URL information */ 
 	var urlElement = document.getElementById("urlElement");
@@ -214,11 +215,24 @@ function fillFromContent(response) {
     		subject: 'urlHausReq'
     	}, 
     	fillUrlHaus);
-    	
+
+}
 
 
-
-
+chrome.runtime.onMessage.addListener( function(request,sender,sendResponse)
+{
+    if(request.subject === "sslCertificateReq" )
+    {
+        var tabURL = "Not set yet";
+        chrome.tabs.query({active:true},function(tabs){
+            if(tabs.length === 0) {
+                sendResponse({});
+                return;
+            }
+            tabURL = tabs[0].url;
+            sendResponse( {navURL:tabURL} );
+        });        
+    }
 }
 
 
