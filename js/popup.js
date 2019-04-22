@@ -222,14 +222,6 @@ function fillFromContent(response) {
 }
 
 
-<<<<<<< HEAD
-chrome.runtime.onMessage.addListener( function(request,sender,sendResponse){
-    if(request.subject === "sslCertificateReq" )
-    {
-              
-    }
-})
-=======
 chrome.runtime.onMessage.addListener( function(request,sender,sendResponse)
 {
     if(request.subject === "sslCertificateReq" ) {
@@ -262,7 +254,6 @@ chrome.runtime.onMessage.addListener( function(request,sender,sendResponse)
 	}
 
 }
->>>>>>> 103a7379d349853255909db9f174157c28183b19
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 window.onload = function(){
