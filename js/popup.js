@@ -222,12 +222,47 @@ function fillFromContent(response) {
 }
 
 
+<<<<<<< HEAD
 chrome.runtime.onMessage.addListener( function(request,sender,sendResponse){
     if(request.subject === "sslCertificateReq" )
     {
               
     }
 })
+=======
+chrome.runtime.onMessage.addListener( function(request,sender,sendResponse)
+{
+    if(request.subject === "sslCertificateReq" ) {
+    	console.log(request);
+		var sslCertificateHTML = document.getElementById("sslCertificate");
+		// console.log(sslCertificateHTML);
+		if (request != null && response.sslCertificate != null) {
+			sslCertificateHTML.innerText = response.sslCertificate;
+		} else {
+			// error handling
+			sslCertificateHTML.innerText = "SSL Certificate Status: N/A";
+		}
+    }
+
+	if (request.subject=="cookieList"){
+		advSet= request.data.advSet;
+		trackSet=request.data.trackSet;
+		socSet=request.data.socSet;
+		// console.log(advSet, socSet, trackSet);
+		
+		var advHTMl = document.getElementById('advSet');
+		var socHTML = document.getElementById('socSet');
+		var trackHTML = document.getElementById('trackSet');
+
+		console.log(advHTML);
+
+		advHTMl.innerText = advSet;
+		socHTML.innerText = socSet;
+		trackHTML.innerText = trackSet;
+	}
+
+}
+>>>>>>> 103a7379d349853255909db9f174157c28183b19
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 window.onload = function(){
