@@ -29271,26 +29271,27 @@ zeusclicks.com
 ziptracker.com
 zsrpc.net
 zummis.de`
-/*
-function readTextFile(file)
-{
-    var rawFile = new XMLHttpRequest();
-    rawFile.open("GET", file, false);
-    rawFile.onreadystatechange = function ()
-    {
-        if(rawFile.readyState === 4)
-        {
-            if(rawFile.status === 200 || rawFile.status == 0)
-            {   
 
-                outputVar = rawFile.responseText;
-            }
-        }
-    }
-    rawFile.send(null);
+function checkSSLCertificate(url) {
+
+    url = (url[url.length-1] == "/") ? url.substring(0, url.length - 1) : url;
+    var validity_window;
+    var payload= {r: 126, 
+                  host: url}
+    console.log(payload);
+    $.post("https://www.digicert.com/api/check-host.php", payload)
+        .done(function(data){
+            // console.log(data);
+            var parser = new DOMParser();
+            var htmlDoc = parser.parseFromString(data, 'text/html');
+
+            const TDs = htmlDoc.getElementsByTagName("td");
+            validity_window = "Certificate is " + TDs[17].innerText;
+            console.log(validity_window);
+        });
+
+    return validity_window;
 }
-*/
-
 
 //url1 is the cookie url and url2 is the hostname
 //needs to be modified acc to needs later
@@ -29304,6 +29305,7 @@ function isSubDomain(url1, url2){
     }
     return false;
 }
+
 
 function buildThirdPartyCookies(cookies){  
     var thirdPartySet = {};
@@ -29328,6 +29330,7 @@ function buildThirdPartyCookies(cookies){
         }
     }
 
+    console.log(thirdPartySet)
     return thirdPartySet;
 }
 
@@ -29354,6 +29357,10 @@ function segmentSet(cookieSet){
             trackSet.push(elem);
         }
     }
+
+    console.log(advSet)
+    console.log(socSet)
+    console.log(trackSet)
 
     chrome.runtime.sendMessage({
         msg: "cookieList",
@@ -29385,6 +29392,7 @@ function buildCookieList(){
           ).values()
         ];
 
+
         console.log(cookies)
         // do something with the cookies here
         var thirdPartySet = buildThirdPartyCookies(cookies);
@@ -29398,18 +29406,11 @@ function buildCookieList(){
 // Upon Installation we want to have these values instantiated
 chrome.runtime.onInstalled.addListener(function() {
 
+    adv = adv.split('\n');
+    social = social.split('\n');
+    trackers = trackers.split('\n');
 
-    //build up all the lists from db set 
-    /*
-    console.log(adv);
-    readTextFile('../texts/adv');
-    adv = outputVar.split('\n');
-    readTextFile('../texts/social');
-    social = outputVar.split('\n');
-    readTextFile('../texts/trackers');
-    trackers = outputVar.split('\n');
-    console.log(trackers);
-    */
+    console.log(adv)
 
     //build up csv data of malicious websites from URLHaus
     $.get("https://urlhaus.abuse.ch/downloads/csv/", function(data){
@@ -29449,6 +29450,7 @@ chrome.runtime.onMessage.addListener(
             		tabId: sender.tab.id
         		});
             }
+
             else{
                 sendResponse({threat: 'No Threat Detected According to URLHaus'});
                 chrome.browserAction.setIcon({
@@ -29458,15 +29460,23 @@ chrome.runtime.onMessage.addListener(
             }
         }
 
-        else if (request.message=="domain"){
+        else if (request.message=="trackers"){
             tabDomain = request.url.toString();
             var wwwIndex = tabDomain.indexOf('www.');
            
             if (wwwIndex>-1){
                 tabDomain = tabDomain.substring(wwwIndex+4, tabDomain.length);
             }
+            console.log(tabDomain)
             buildCookieList();      
         }
+
+        else if (request.message="sslCertificateReq"){
+            var valid = checkSSLCertificate(request.url);
+            console.log(valid);
+            sendResponse({SSLCertificate: valid});
+        }
+
         return Promise.resolve("Dummy response to keep the console quiet");
     }
 );
