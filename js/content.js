@@ -43,10 +43,6 @@ function checkSSLCertificate() {
 window.onload = function(){
 	checkSSLCertificate();
 	sendToBackgroud();
-	$.get("128.237.219.76:8000/URLAssociations/", function( data ) {
-		console.log('hi from shaurya');
-  		console.log(data);
-	});
 }
 
 

@@ -12,6 +12,43 @@
 var advSet;
 var socSet;
 var trackSet;
+var serverProtocol = "http://";
+var serverIP = "128.237.219.76";
+var serverChannel = "8000";
+var requestURL = serverProtocol + serverIP + ":" + serverChannel;  "/URLAssociations/" + pageUrl + "/";
+
+var pageUrl = null;
+var urlRatingData = null;
+
+function thumbs(){
+	document.getElementById("thumbsUp").onclick = function() {
+		// PATCH Request 
+		var patch = {
+    		"rating" : urlRatingData + 1
+		}
+		var request = new XMLHttpRequest();
+		request.open('PATCH', requestURL, false);
+		request.setRequestHeader("Content-type","application/json");
+		request.send(JSON.stringify(patch));
+		console.log("PATCH SUCCESS");
+	}
+
+	document.getElementById("thumbsDown").onclick = function() {
+		// GET REQUEST
+		$.get(requestURL, function( data ) {
+			rating = urlRatingData;
+		});
+
+		// PATCH Request
+		var patch = {
+    		"rating" : rating - 1
+		}
+		var request = new XMLHttpRequest();
+		request.open('PATCH', requestURL, false);
+		request.setRequestHeader("Content-type","application/json");
+		request.send(JSON.stringify(patch));
+	}
+}
 
 
 /* fillHTTPStatus:
@@ -44,7 +81,7 @@ function fillHTTPStatus(response) {
  */
 function fillUrlHaus(response) {
 	var urlHausHtml = document.getElementById("urlHaus");
-	console.log(urlHausHtml);
+	// console.log(urlHausHtml);
 	if (response != null && response.threat != null) {
 		urlHausHtml.innerText = response.threat;
 	} else {
@@ -62,7 +99,7 @@ function fillUrlHaus(response) {
  */
 function fillCertificateStatus(response) {
 	var sslCertificateHTML = document.getElementById("sslCertificate");
-	console.log(sslCertificateHTML);
+	// console.log(sslCertificateHTML);
 	if (response != null && response.sslCertificate != null) {
 		sslCertificateHTML.innerText = response.sslCertificate;
 	} else {
@@ -80,12 +117,16 @@ function fillCertificateStatus(response) {
  */
 function fillUrlRating(response) {
 	var urlRating = document.getElementById("urlRating");
-	var url = null;
 	if (response != null && response.url != null) {
-		url = response.url;
+		urlRating.innerText = response.url;
+		pageUrl = response.url.replace(/\./g, "");
+
+		$.get(requestURL, function( data ) {
+			urlRatingData = data.rating;
+			urlRating.innerText = urlRatingData;
+		});
+
 	}
-
-
 }
 
 
@@ -95,7 +136,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 		advSet= request.data.advSet;
 		trackSet=request.data.trackSet;
 		socSet=request.data.socSet;
-		console.log(advSet, socSet, trackSet);
+		// console.log(advSet, socSet, trackSet);
 		
 		var advHTMl = document.getElementById('advSet');
 		var socHTML = document.getElementById('socSet');
@@ -105,20 +146,13 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 		socHTML.innerText = socSet;
 		trackHTML.innerText = trackSet;
 	}
-})
+});
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 window.onload = function(){
-	$.get("http://google.com", function( data ) {
-		console.log('hi from google');
-	});
-	$.get("128.237.219.76:8000/URLAssociations/", function( data ) {
-		console.log('hi from shaurya');
-  		console.log(data);
-	});
 
 	chrome.tabs.query({ active: true, currentWindow: true}, 
-    	function (tabs) {
+    	function (tabs, ) {
 
     		// Send message to content.js about protocol Status
     		chrome.tabs.sendMessage(
@@ -142,5 +176,6 @@ window.onload = function(){
     			{from: 'popup', subject: 'urlReq'}, 
     			fillUrlRating);
     	});
+	thumbs();
 };
 
