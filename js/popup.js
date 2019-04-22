@@ -140,6 +140,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 		var socHTML = document.getElementById('socSet');
 		var trackHTML = document.getElementById('trackSet');
 
+		console.log(advHTML);
+
 		advHTMl.innerText = advSet;
 		socHTML.innerText = socSet;
 		trackHTML.innerText = trackSet;
