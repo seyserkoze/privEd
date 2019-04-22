@@ -29272,7 +29272,7 @@ ziptracker.com
 zsrpc.net
 zummis.de`
 
-function checkSSLCertificate(url) {
+function checkSSLCertificate(url, sendResponse) {
 
     url = (url[url.length-1] == "/") ? url.substring(0, url.length - 1) : url;
     var validity_window;
@@ -29287,10 +29287,11 @@ function checkSSLCertificate(url) {
 
             const TDs = htmlDoc.getElementsByTagName("td");
             validity_window = "Certificate is " + TDs[17].innerText;
+            console.log("validity_window")
             console.log(validity_window);
+            chrome.runtime.sendMessage({ sslCertificate : validity_window}, function(){});
         });
 
-    return validity_window;
 }
 
 //url1 is the cookie url and url2 is the hostname
@@ -29334,7 +29335,7 @@ function buildThirdPartyCookies(cookies){
     return thirdPartySet;
 }
 
-function segmentSet(cookieSet){
+function segmentSet(cookieSet, sendResponse){
 
     var advSet=[];
     var socSet=[];
@@ -29369,7 +29370,7 @@ function segmentSet(cookieSet){
             socSet: socSet,
             trackSet: trackSet
         }
-    })
+    }, function() {})
 }
 
 function buildCookieList(){
@@ -29445,23 +29446,25 @@ chrome.runtime.onMessage.addListener(
             if (malicious_dict[url_check]){
                 var threatMsg = "URLHaus detected this website is malicious because of" + malicious_dict[url_check]
                 sendResponse({threat: threatMsg});
-                chrome.browserAction.setIcon({
-            		path: "images/red2.png", // frown.png
-            		tabId: sender.tab.id
-        		});
+          //       chrome.browserAction.setIcon({
+          //   		path: "images/red2.png", // frown.png
+          //   		tabId: sender.tab.id
+        		// });
             }
 
             else{
                 sendResponse({threat: 'No Threat Detected According to URLHaus'});
-                chrome.browserAction.setIcon({
-            		path: "images/green2.png", // smile.png
-            		tabId: sender.tab.id
-        		});
+          //       chrome.browserAction.setIcon({
+          //   		path: "images/green2.png", // smile.png
+          //   		tabId: sender.tab.id
+        		// });
             }
         }
 
         else if (request.subject=="trackersReq"){
             tabDomain = request.hostname.toString();
+            console.log('trackersReq')
+            console.log(request)
             var wwwIndex = tabDomain.indexOf('www.');
            
             if (wwwIndex>-1){
@@ -29472,9 +29475,8 @@ chrome.runtime.onMessage.addListener(
         }
 
         else if (request.subject="sslCertificateReq"){
-            var valid = checkSSLCertificate(request.hostname);
-            console.log(valid);
-            sendResponse({sslCertificate: valid});
+            checkSSLCertificate(request.hostname);
+            
         }
 
         return Promise.resolve("Dummy response to keep the console quiet");

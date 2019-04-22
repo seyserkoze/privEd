@@ -94,6 +94,7 @@ function fillUrlHaus(response) {
  * @output: void
  */
 function fillCertificateStatus(response) {
+	console.log(response)
 	var sslCertificateHTML = document.getElementById("sslCertificate");
 	// console.log(sslCertificateHTML);
 	if (response != null && response.sslCertificate != null) {
@@ -128,6 +129,8 @@ function fillUrlRating(response) {
 }
 
 function fillTrackers(response) {
+	console.log(response)
+	console.log(response)
 	if (response.subject=="cookieList"){
 		advSet= response.data.advSet;
 		trackSet=response.data.trackSet;
@@ -220,7 +223,6 @@ function fillFromContent(response) {
 
 
 }
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 window.onload = function(){
