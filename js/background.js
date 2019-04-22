@@ -29363,7 +29363,7 @@ function segmentSet(cookieSet){
     console.log(trackSet)
 
     chrome.runtime.sendMessage({
-        msg: "cookieList",
+        subject: "cookieList",
         data: {
             advSet: advSet,
             socSet: socSet,
@@ -29440,8 +29440,8 @@ chrome.runtime.onMessage.addListener(
         
         // console.log(malicious_dict['"http://52.90.151.246/Obtc/ShadowMonitorTool35.jpg"']);
 
-        if (request.message=="urlHausReq"){
-            var url_check = '"'+request.url+'"';
+        if (request.subject=="urlHausReq"){
+            var url_check = '"'+request.href+'"';
             if (malicious_dict[url_check]){
                 var threatMsg = "URLHaus detected this website is malicious because of" + malicious_dict[url_check]
                 sendResponse({threat: threatMsg});
@@ -29460,8 +29460,8 @@ chrome.runtime.onMessage.addListener(
             }
         }
 
-        else if (request.message=="trackers"){
-            tabDomain = request.url.toString();
+        else if (request.subject=="trackersReq"){
+            tabDomain = request.hostname.toString();
             var wwwIndex = tabDomain.indexOf('www.');
            
             if (wwwIndex>-1){
@@ -29471,10 +29471,10 @@ chrome.runtime.onMessage.addListener(
             buildCookieList();      
         }
 
-        else if (request.message="sslCertificateReq"){
-            var valid = checkSSLCertificate(request.url);
+        else if (request.subject="sslCertificateReq"){
+            var valid = checkSSLCertificate(request.hostname);
             console.log(valid);
-            sendResponse({SSLCertificate: valid});
+            sendResponse({sslCertificate: valid});
         }
 
         return Promise.resolve("Dummy response to keep the console quiet");
