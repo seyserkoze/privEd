@@ -222,21 +222,12 @@ function fillFromContent(response) {
 }
 
 
-chrome.runtime.onMessage.addListener( function(request,sender,sendResponse)
-{
+chrome.runtime.onMessage.addListener( function(request,sender,sendResponse){
     if(request.subject === "sslCertificateReq" )
     {
-        var tabURL = "Not set yet";
-        chrome.tabs.query({active:true},function(tabs){
-            if(tabs.length === 0) {
-                sendResponse({});
-                return;
-            }
-            tabURL = tabs[0].url;
-            sendResponse( {navURL:tabURL} );
-        });        
+              
     }
-}
+})
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 window.onload = function(){
