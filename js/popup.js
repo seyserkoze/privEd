@@ -196,8 +196,7 @@ function fillFromContent(response) {
        		to: 'background',
     		hostname: response.hostname,
    			subject: 'sslCertificateReq'
-  		}, 
- 		fillCertificateStatus);
+  		});
 
    	// Send message to background.js about the trackers hostname
   	chrome.runtime.sendMessage(
@@ -206,8 +205,7 @@ function fillFromContent(response) {
        		to: 'background',
     		hostname: response.hostname,
    			subject: 'trackersReq'
-  		}, 
- 		fillTrackers);
+  		});
 
 	// Send message to background.js about the urlHaus results
     chrome.runtime.sendMessage(
@@ -216,8 +214,7 @@ function fillFromContent(response) {
         	to: 'background',
         	href: response.href,
     		subject: 'urlHausReq'
-    	}, 
-    	fillUrlHaus);
+    	});
 
 }
 
