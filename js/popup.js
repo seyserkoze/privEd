@@ -224,18 +224,35 @@ function fillFromContent(response) {
 
 chrome.runtime.onMessage.addListener( function(request,sender,sendResponse)
 {
-    if(request.subject === "sslCertificateReq" )
-    {
-        var tabURL = "Not set yet";
-        chrome.tabs.query({active:true},function(tabs){
-            if(tabs.length === 0) {
-                sendResponse({});
-                return;
-            }
-            tabURL = tabs[0].url;
-            sendResponse( {navURL:tabURL} );
-        });        
+    if(request.subject === "sslCertificateReq" ) {
+    	console.log(request);
+		var sslCertificateHTML = document.getElementById("sslCertificate");
+		// console.log(sslCertificateHTML);
+		if (request != null && response.sslCertificate != null) {
+			sslCertificateHTML.innerText = response.sslCertificate;
+		} else {
+			// error handling
+			sslCertificateHTML.innerText = "SSL Certificate Status: N/A";
+		}
     }
+
+	if (request.subject=="cookieList"){
+		advSet= request.data.advSet;
+		trackSet=request.data.trackSet;
+		socSet=request.data.socSet;
+		// console.log(advSet, socSet, trackSet);
+		
+		var advHTMl = document.getElementById('advSet');
+		var socHTML = document.getElementById('socSet');
+		var trackHTML = document.getElementById('trackSet');
+
+		console.log(advHTML);
+
+		advHTMl.innerText = advSet;
+		socHTML.innerText = socSet;
+		trackHTML.innerText = trackSet;
+	}
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
