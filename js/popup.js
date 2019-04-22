@@ -216,7 +216,7 @@ function fillFromContent(response) {
     		hostname: response.hostname,
    			subject: 'sslCertificateReq'
   		}, 
- 		fillTrackers);
+ 		fillCertificateStatus);
 
 }
 
