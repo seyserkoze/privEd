@@ -186,8 +186,7 @@ function fillFromContent(response) {
 
 	/* send messages to background */
 	// Send message to background.js about the urlHaus results
-    chrome.tabs.sendMessage(
-    	tabs[0].id, 
+    chrome.runtime.sendMessage(
     	{
         	from: 'popup', 
         	to: 'background',
@@ -197,8 +196,7 @@ function fillFromContent(response) {
     	fillUrlHaus);
     	
    	// Send message to background.js about the response hostname
-  	chrome.tabs.sendMessage(
-   		tabs[0].id, 
+  	chrome.runtime.sendMessage(
    		{
     		from: 'popup', 
        		to: 'background',
@@ -208,8 +206,7 @@ function fillFromContent(response) {
  		fillTrackers);
 
    	// Send message to background.js about the sslCertificate
-   	chrome.tabs.sendMessage(
-   		tabs[0].id, 
+   	chrome.runtime.sendMessage(
    		{
     		from: 'popup', 
        		to: 'background',
@@ -223,7 +220,6 @@ function fillFromContent(response) {
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 window.onload = function(){
-
 	chrome.tabs.query({ active: true, currentWindow: true}, 
     	function (tabs) {
     		chrome.tabs.sendMessage(
