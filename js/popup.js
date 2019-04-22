@@ -7,8 +7,6 @@
  * March 19, 2019
  */
 
-
-
 var advSet;
 var socSet;
 var trackSet;

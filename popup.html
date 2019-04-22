@@ -1,10 +1,6 @@
 <html>
 	<head> 
-    <script src="js/jquery.js"></script>
-		<script src="js/popup.js"></script>
-    <script src="js/style.js"></script>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="styles.css">
+
 	</head>
     <body>
       <div id="header">
@@ -12,30 +8,40 @@
       </div>
         <br>
         <div id="urlHaus"></div><br><br>
+
         <i class="fas fa-thumbs-up" id="thumbsUp"></i>
         <div id="urlRatingElement"></div>
         <i class="fas fa-thumbs-down" id="thumbsDown"></i>
-         <div id="urlElement"></div><br>
-
+        <div id="urlElement"></div><br>
 
         <div class="tab">
           <div class="tablinks"id="cert">Certificate Info</div>
           <div class="tablinks" id="track">Tracking Info</div>
         </div>
 
-      	<div id="protocolElement"></div><br>
-      	<div id="sslCertificate"></div><br>
-      
-      	Social Trackers are:<br>
-      	<div id="socSet"></div><br>
+        <div id="trackTab" class="tabContent">
+          <div id="protocolElement"></div><br>
+          <div id="sslCertificate"></div><br>
+        </div>
 
-      	Advertising Trackers are:<br>
-      	<div id="advSet"></div><br>
+        <div id="certTab" class="tabContent">
+          Social Trackers are:<br>
+          <div id="socSet"></div><br>
 
-      	Analytics Trackers are:<br>
-      	<div id="trackSet"></div><br>
+          Advertising Trackers are:<br>
+          <div id="advSet"></div><br>
 
-
+          Analytics Trackers are:<br>
+          <div id="trackSet"></div><br>
+        </div>
 
     </body>
+
+    <script src="js/jquery.js" async></script>
+    <script src="style.js" async></script>
+    <script src="js/popup.js" async></script>
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+
 </html>
