@@ -29284,12 +29284,14 @@ function checkURLHaus(url){
         threatMsg = "No Threat Detected";
     }
 
+    console.log("threat is " + threatMsg);
     chrome.runtime.sendMessage({subject: 'urlHausRes', threat: threatMsg}, function(){});
 }
 
 function getURLAssociations(requestURL){
     $.get(requestURL, function( data ) {
           var urlRatingData = data.rating;
+          console.log("rating is " + urlRatingData);
           chrome.runtime.sendMessage({subject: 'urlRating', urlRatingData: urlRatingData}, function(){});
           });
 }
@@ -29307,6 +29309,7 @@ function checkSSLCertificate(url) {
 
             const TDs = htmlDoc.getElementsByTagName("td");
             validity_window = "Certificate is " + TDs[17].innerText;
+            console.log("ssl Certificate is :"+ validity_window);
             chrome.runtime.sendMessage({ subject: "sslCertificate", sslCertificate : validity_window}, function(){});
         });
 
@@ -29375,6 +29378,11 @@ function segmentSet(cookieSet, sendResponse){
         }
     }
 
+    console.log("trackers are")
+    console.log(advSet)
+    console.log(socSet)
+    console.log(trackSet)
+    console.log("trackers done listing")
     chrome.runtime.sendMessage({
         subject: "cookieList",
         data: {
