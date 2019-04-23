@@ -29289,7 +29289,7 @@ function checkSSLCertificate(url, sendResponse) {
             validity_window = "Certificate is " + TDs[17].innerText;
             console.log("validity_window")
             console.log(validity_window);
-            chrome.runtime.sendMessage({ sslCertificate : validity_window}, function(){});
+            chrome.runtime.sendMessage({ subject: "sslCertificate", sslCertificate : validity_window}, function(){});
         });
 
 }
