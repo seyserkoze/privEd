@@ -29483,7 +29483,7 @@ chrome.runtime.onMessage.addListener(
         }
 
         else if (request.subject="sslCertificateReq"){
-            console.log(request.hostname);
+            console.log(request);
             checkSSLCertificate(request.hostname);
             
         }

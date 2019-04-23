@@ -203,7 +203,6 @@ function fillFromContent(response) {
 	}
 
 
-
 	/* send messages to background */
 	// Send message to background.js about the sslCertificate
    	chrome.runtime.sendMessage(
@@ -212,7 +211,7 @@ function fillFromContent(response) {
        		to: 'background',
     		hostname: masterHost,
    			subject: 'sslCertificateReq'
-  		});
+  		}, function(){});
 
    	// Send message to background.js about the trackers hostname
   	chrome.runtime.sendMessage(
@@ -221,7 +220,7 @@ function fillFromContent(response) {
        		to: 'background',
     		hostname: masterHost,
    			subject: 'trackersReq'
-  		});
+  		}, function(){});
 
 	// Send message to background.js about the urlHaus results
     chrome.runtime.sendMessage(
@@ -230,7 +229,7 @@ function fillFromContent(response) {
         	to: 'background',
         	href: masterHref,
     		subject: 'urlHausReq'
-    	});
+    	}, function(){});
 
 }
 
