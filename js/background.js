@@ -6,17 +6,6 @@
  * March 19, 2019
  */
 
-var malicious_dict = {};
-var tabDomain;
-var masterHost;
-var masterHref;
-var protocol;
-var outputVar;
-var serverIP = "http://128.237.199.215";
-var serverPort = "8000";
-var urlAssociations = serverIP + ":" + serverPort + "/URLAssociations/";
-var pageUrl = null;
-
 var adv = `000freexxx.com
 004.frnl.de
 01sexe.com
@@ -29279,6 +29268,18 @@ zeusclicks.com
 ziptracker.com
 zsrpc.net
 zummis.de`
+
+
+var malicious_dict = {};
+var tabDomain;
+var masterHost;
+var masterHref;
+var protocol;
+var outputVar;
+var serverIP = "http://128.237.199.215";
+var serverPort = "8000";
+var urlAssociations = serverIP + ":" + serverPort + "/URLAssociations/";
+var pageUrl = null;
 
 
 var protocolText;

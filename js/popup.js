@@ -10,6 +10,8 @@
 var advSet;
 var socSet;
 var trackSet;
+var serverIP = "http://128.237.199.215";
+var serverPort = "8000";
 var urlAssociations = serverIP + ":" + serverPort + "/URLAssociations/";
 
 var pageUrl = null;
@@ -171,7 +173,7 @@ chrome.runtime.onMessage.addListener( function(message,sender,sendResponse)
 
 			case "protocolRes":
 				console.log("popup is messaging info about protocol")
-				fillProtocol(message.protocolText);
+				fillProtocol(message.protocol);
 				break;
 			
 			case "urlHausRes":
