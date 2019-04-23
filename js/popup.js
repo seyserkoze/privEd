@@ -10,7 +10,7 @@
 var advSet;
 var socSet;
 var trackSet;
-var serverIP = "http://128.237.199.215";
+var serverIP = "http://128.237.201.249";
 var serverPort = "8000";
 var urlAssociations = serverIP + ":" + serverPort + "/URLAssociations/";
 

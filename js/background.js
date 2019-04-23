@@ -29274,7 +29274,7 @@ var malicious_dict = {};
 var tabDomain;
 
 var outputVar;
-var serverIP = "http://128.237.199.215";
+var serverIP = "http://128.237.201.249";
 var serverPort = "8000";
 var urlAssociations = serverIP + ":" + serverPort + "/URLAssociations/";
 var pageUrl = null;
