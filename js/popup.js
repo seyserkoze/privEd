@@ -161,6 +161,7 @@ function fillFromContent(response) {
 	console.log("got response");
 
 
+	if (response){
 		/* Fill the HTTP Status from content.js' protocol information */
 		var protocolElement = document.getElementById('protocolElement');
 		
@@ -178,7 +179,7 @@ function fillFromContent(response) {
 		pageUrl = response.hostname.replace(/\./g, "");
 		requestURL = urlAssociations + pageUrl + "/";
 		sendToBackground(requestURL, masterHost, masterHref);
-	// }
+	}
 
 }
 
@@ -186,7 +187,7 @@ function fillFromContent(response) {
 chrome.runtime.onMessage.addListener( function(message,sender,sendResponse)
 {
 
-	if (message != null && message.subject != null && message.from == "background") {
+	if (message && message.subject && message.from == "background") {
 		switch(message.subject){
 			
 			case "urlHausRes":
