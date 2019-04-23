@@ -29273,6 +29273,20 @@ zsrpc.net
 zummis.de`
 
 
+function checkURLHaus(url){
+    var threatMsg;
+
+    if (malicious_dict[url_check]){
+        threatMsg = "URLHaus detected this website is malicious because of" + malicious_dict[url_check];
+    }
+
+    else {
+        threatMsg = "No Threat Detected";
+    }
+
+    chrome.runtime.sendMessage({subject: 'urlHausRes', threat: threatMsg}, function(){});
+}
+
 function getURLAssociations(requestURL){
     $.get(requestURL, function( data ) {
           var urlRatingData = data.rating;
@@ -29431,6 +29445,7 @@ chrome.runtime.onInstalled.addListener(function() {
 
 });
 
+
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
         
@@ -29438,46 +29453,18 @@ chrome.runtime.onMessage.addListener(
 
         console.log(request);
 
-        if (request.subject=="urlHausReq"){
+        if (request.subject=="backgroundReq"){
             var url_check = '"'+request.href+'"';
-            if (malicious_dict[url_check]){
-                var threatMsg = "URLHaus detected this website is malicious because of" + malicious_dict[url_check]
-                sendResponse({threat: threatMsg});
-          //       chrome.browserAction.setIcon({
-          //   		path: "images/red2.png", // frown.png
-          //   		tabId: sender.tab.id
-        		// });
-            }
-
-            else{
-                sendResponse({threat: 'No Threat Detected According to URLHaus'});
-          //       chrome.browserAction.setIcon({
-          //   		path: "images/green2.png", // smile.png
-          //   		tabId: sender.tab.id
-        		// });
-            }
-        }
-
-        else if (request.subject=="trackersReq"){
+            
             tabDomain = request.hostname.toString();
-            var wwwIndex = tabDomain.indexOf('www.');
-           
+            var wwwIndex = tabDomain.indexOf('www.');  
             if (wwwIndex>-1){
                 tabDomain = tabDomain.substring(wwwIndex+4, tabDomain.length);
             }
+
+            checkURLHaus(url_check);
             buildCookieList();      
-        }
-
-        else if (request.subject="sslCertificateReq"){
-            console.log('ssl')
-            console.log(request)
-            console.log('exit')
             checkSSLCertificate(request.hostname);
-            
-        }
-
-
-        else if (request.subject="urlRating"){
             getURLAssociations(request.requestURL);
         }
 
