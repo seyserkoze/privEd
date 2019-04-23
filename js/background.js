@@ -29272,6 +29272,16 @@ ziptracker.com
 zsrpc.net
 zummis.de`
 
+
+function getURLAssociations(requestURL){
+    $.get(requestURL, function( data ) {
+
+          var urlRatingData = data.rating;
+          chrome.runtime.sendMessage({urlRatingData: urlRatingData}, function(){});
+
+          });
+}
+
 function checkSSLCertificate(url, sendResponse) {
 
     url = (url[url.length-1] == "/") ? url.substring(0, url.length - 1) : url;
@@ -29477,6 +29487,11 @@ chrome.runtime.onMessage.addListener(
         else if (request.subject="sslCertificateReq"){
             checkSSLCertificate(request.hostname);
             
+        }
+
+
+        else if (request.subject="urlRating"){
+            getURLAssociations(request.requestURL);
         }
 
         return Promise.resolve("Dummy response to keep the console quiet");
