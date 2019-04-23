@@ -156,6 +156,8 @@ function fillTrackers(response) {
 
 function fillFromContent(response) {
 
+	console.log("This is the content's response:")
+	console.log(response);
 	if (response != null && response.hostname != null && response.href != null) {
 		console.log("got response");
 
@@ -271,7 +273,7 @@ chrome.runtime.onMessage.addListener( function(request,sender,sendResponse)
 		// var urlElement = document.getElementById("urlElement");
 		var urlRatingElement = document.getElementById("urlRatingElement");
 		
-		urlRatingData = data.rating; // Global
+		urlRatingData = request.urlRatingData; // Global
 		urlRatingElement.innerText = "URL Rating: " + urlRatingData;
 	}
 
