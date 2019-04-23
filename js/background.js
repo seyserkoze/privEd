@@ -29331,7 +29331,7 @@ function checkSSLCertificate(url) {
             var parser = new DOMParser();
             var htmlDoc = parser.parseFromString(data, 'text/html');
 
-            const TDs = htmlDoc.getElementsByTagName("td");
+            var TDs = htmlDoc.getElementsByTagName("td");
             validity_window = "Certificate is " + TDs[17].innerText;
             console.log("ssl Certificate is :"+ validity_window);
             chrome.runtime.sendMessage({ subject: "sslCertificate", sslCertificate : validity_window}, function(){});
