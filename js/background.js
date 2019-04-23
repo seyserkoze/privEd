@@ -29378,11 +29378,7 @@ function segmentSet(cookieSet, sendResponse){
         }
     }
 
-    console.log("trackers are")
-    console.log(advSet)
-    console.log(socSet)
-    console.log(trackSet)
-    console.log("trackers done listing")
+    console.log("sending trackers")
     chrome.runtime.sendMessage({
         subject: "cookieList",
         data: {
@@ -29413,6 +29409,8 @@ function buildCookieList(){
           ).values()
         ];
 
+        console.log("cookies are ")
+        console.log(cookies)
 
         // do something with the cookies here
         var thirdPartySet = buildThirdPartyCookies(cookies);

@@ -199,9 +199,9 @@ chrome.runtime.onMessage.addListener( function(message,sender,sendResponse)
 {
 
 	console.log(message);
+	
 	if (message && message.subject) {
 		switch(message.subject){
-			console.log(message.subject)
 			
 			case "urlHausRes":
 				console.log("popup is messaging info about URLHaus");
