@@ -16,6 +16,8 @@ var urlAssociations = serverIP + ":" + serverPort + "/URLAssociations/";
 
 var pageUrl = null;
 var urlRatingData = null;
+var masterHost;
+var masterHref;
 
 function thumbs(){
 	document.getElementById("thumbsUp").onclick = function() {
@@ -155,20 +157,23 @@ function fillTrackers(response) {
 function fillFromContent(response) {
 	console.log(response);
 
+	masterHost=response.hostname;
+	masterHref= response.href
+
 	/* Fill the URL rating from Content.js' URL information */ 
 	var urlElement = document.getElementById("urlElement");
 	var urlRatingElement = document.getElementById("urlRatingElement");
 	
-	if (response != null && response.hostname != null) {
-		urlElement.innerText = "URL: " + response.hostnamel;
-		pageUrl = response.hostname.replace(/\./g, "");
+	// if (response != null && response.hostname != null) {
+	// 	urlElement.innerText = "URL: " + response.hostnamel;
+	// 	pageUrl = response.hostname.replace(/\./g, "");
 
-		var requestURL = urlAssociations + pageUrl + "/";
-		$.get(requestURL, function( data ) {
-			urlRatingData = data.rating;
-			urlRatingElement.innerText = "URL Rating: " + urlRatingData;
-		});
-	}
+	// 	var requestURL = urlAssociations + pageUrl + "/";
+	// 	$.get(requestURL, function( data ) {
+	// 		urlRatingData = data.rating;
+	// 		urlRatingElement.innerText = "URL Rating: " + urlRatingData;
+	// 	});
+	// }
 
 
 	/* Fill the HTTP Status from content.js' protocol information */
@@ -194,7 +199,7 @@ function fillFromContent(response) {
    		{
     		from: 'popup', 
        		to: 'background',
-    		hostname: response.hostname,
+    		hostname: masterHost,
    			subject: 'sslCertificateReq'
   		});
 
@@ -203,7 +208,7 @@ function fillFromContent(response) {
    		{
     		from: 'popup', 
        		to: 'background',
-    		hostname: response.hostname,
+    		hostname: masterHost,
    			subject: 'trackersReq'
   		});
 
@@ -225,8 +230,8 @@ chrome.runtime.onMessage.addListener( function(request,sender,sendResponse)
     	console.log(request);
 		var sslCertificateHTML = document.getElementById("sslCertificate");
 		// console.log(sslCertificateHTML);
-		if (request != null && response.sslCertificate != null) {
-			sslCertificateHTML.innerText = response.sslCertificate;
+		if (request != null && request.sslCertificate != null) {
+			sslCertificateHTML.innerText = request.sslCertificate;
 		} else {
 			// error handling
 			sslCertificateHTML.innerText = "SSL Certificate Status: N/A";
@@ -235,9 +240,9 @@ chrome.runtime.onMessage.addListener( function(request,sender,sendResponse)
 
 	if (request.subject=="cookieList"){
 		advSet= request.data.advSet;
-		trackSet=request.data.trackSet;
-		socSet=request.data.socSet;
-		// console.log(advSet, socSet, trackSet);
+		trackSet= request.data.trackSet;
+		socSet= request.data.socSet;
+		console.log(advSet, socSet, trackSet);
 		
 		var advHTML = document.getElementById('advSet');
 		var socHTML = document.getElementById('socSet');
@@ -245,7 +250,7 @@ chrome.runtime.onMessage.addListener( function(request,sender,sendResponse)
 
 		console.log(advHTML);
 
-		advHTMl.innerText = advSet;
+		advHTML.innerText = advSet;
 		socHTML.innerText = socSet;
 		trackHTML.innerText = trackSet;
 	}
