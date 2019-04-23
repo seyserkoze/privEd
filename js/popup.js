@@ -10,7 +10,7 @@
 var advSet;
 var socSet;
 var trackSet;
-var serverIP = "http://128.237.126.20";
+var serverIP = "http://128.237.199.215";
 var serverPort = "8000";
 var urlAssociations = serverIP + ":" + serverPort + "/URLAssociations/";
 
@@ -221,7 +221,7 @@ function fillFromContent(response) {
 
 chrome.runtime.onMessage.addListener( function(request,sender,sendResponse)
 {
-    if(request.subject === "sslCertificateReq" ) {
+    if(request.subject === "sslCertificate" ) {
     	console.log(request);
 		var sslCertificateHTML = document.getElementById("sslCertificate");
 		// console.log(sslCertificateHTML);
@@ -239,7 +239,7 @@ chrome.runtime.onMessage.addListener( function(request,sender,sendResponse)
 		socSet=request.data.socSet;
 		// console.log(advSet, socSet, trackSet);
 		
-		var advHTMl = document.getElementById('advSet');
+		var advHTML = document.getElementById('advSet');
 		var socHTML = document.getElementById('socSet');
 		var trackHTML = document.getElementById('trackSet');
 
@@ -250,7 +250,7 @@ chrome.runtime.onMessage.addListener( function(request,sender,sendResponse)
 		trackHTML.innerText = trackSet;
 	}
 
-}
+});
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 window.onload = function(){
