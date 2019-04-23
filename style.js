@@ -34,27 +34,3 @@ function openTab(evt, tabName) {
   evt.currentTarget.className += " active";
 }
 
-var ctx = document.getElementById('myChart');
-data= {
-        labels: ['Social', 'Analytical', 'Advertising'],
-        datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3],
-            backgroundColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)'
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)'
-            ],
-            borderWidth: 1
-        }]
-    }
-
-var myPieChart = new Chart(ctx, {
-    type: 'doughnut',
-    data: data
-});

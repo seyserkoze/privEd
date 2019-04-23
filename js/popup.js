@@ -18,8 +18,6 @@ var pageUrl = null;
 var urlRatingData = null;
 
 
-
-
 function deliverPatch(incr){
 	var patch = {
 		"rating" : urlRatingData + incr
@@ -122,6 +120,39 @@ function fillTrackers(trackingData) {
 	advHTMl.innerText = advSet;
 	socHTML.innerText = socSet;
 	trackHTML.innerText = trackSet;
+
+	var ctx = document.getElementById('myChart');
+	ctx.height = 100;
+	ctx.width =100;
+
+	data= {
+	        labels: ['Social', 'Analytical', 'Advertising'],
+	        datasets: [{
+	            label: 'Distribution of Third Party Trackers',
+	            data: [socSet.length, trackSet.length, advSet.length],
+	            backgroundColor: [
+	                'rgba(255, 99, 132, 1)',
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(255, 206, 86, 1)'
+	            ],
+	            borderColor: [
+	                'rgba(255, 99, 132, 1)',
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(255, 206, 86, 1)'
+	            ],
+	            borderWidth: 1
+	        }]
+	    }
+
+	var myPieChart = new Chart(ctx, {
+	    type: 'doughnut',
+	    data: data,
+	    options: {
+	    			responsive: true,
+                    maintainAspectRatio: false,
+                }
+	});
+
 }
 
 

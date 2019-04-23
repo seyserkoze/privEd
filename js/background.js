@@ -29393,6 +29393,7 @@ function segmentSet(cookieSet, sendResponse){
     var trackSet=[];
 
     for (var elem in cookieSet){
+
         var elemCopy = elem;
         if (elem[0]=="."){
             elem= elem.substring(1, elem.length);
@@ -29401,11 +29402,11 @@ function segmentSet(cookieSet, sendResponse){
             advSet.push(elem);
         }
 
-        else if (social.includes(elem)){
+        if (social.includes(elem)){
             socSet.push(elem);
         }
 
-        else if (trackers.includes(elem)){
+        if (trackers.includes(elem)){
             trackSet.push(elem);
         }
     }
