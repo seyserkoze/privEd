@@ -29468,6 +29468,6 @@ chrome.runtime.onMessage.addListener(
             getURLAssociations(request.requestURL);
         }
 
-        return Promise.resolve("Dummy response to keep the console quiet");
+        return true;
     }
 );
