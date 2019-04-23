@@ -77,7 +77,7 @@ function fillHTTPStatus(response) {
 
 
 
-/* Filling HTML divs from popup.js */
+/* Filling HTML divs from background.js */
 
 /* fillUrlHaus:
  * @description: takes the data diven from consent.js and uses that data to write to popup.html's
@@ -131,7 +131,7 @@ function fillSSLStatus(sslCertificate){
 	var sslCertificateHTML = document.getElementById("sslCertificate");
 	// console.log(sslCertificateHTML);
 	if (sslCertificate != null) {
-		sslCertificateHTML.innerText = request.sslCertificate;
+		sslCertificateHTML.innerText = sslCertificate;
 	} else {
 		// error handling
 		sslCertificateHTML.innerText = "SSL Certificate Status: N/A";
@@ -140,14 +140,12 @@ function fillSSLStatus(sslCertificate){
 
 
 function fillURLRating(urlRatingData){
-	if (request.subject == "urlAssociations"){
-		/* Fill the URL rating from Content.js' URL information */ 
-		// var urlElement = document.getElementById("urlElement");
-		var urlRatingElement = document.getElementById("urlRatingElement");
+	/* Fill the URL rating from Content.js' URL information */ 
+	// var urlElement = document.getElementById("urlElement");
+	var urlRatingElement = document.getElementById("urlRatingElement");
 		
-		urlRatingData = request.urlRatingData; // Global
-		urlRatingElement.innerText = "URL Rating: " + urlRatingData;
-	}
+	urlRatingData = request.urlRatingData; // Global
+	urlRatingElement.innerText = "URL Rating: " + urlRatingData;
 }
 
 
