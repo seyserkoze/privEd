@@ -77,11 +77,11 @@ function fillHTTPStatus(response) {
  * @input: response - the data given to popup.js from the 
  * @output: void
  */
-function fillUrlHaus(response) {
+function fillUrlHaus(threat) {
 	var urlHausHtml = document.getElementById("urlHaus");
 	// console.log(urlHausHtml);
-	if (response != null && response.threat != null) {
-		urlHausHtml.innerText = response.threat;
+	if (threat != null) {
+		urlHausHtml.innerText = threat;
 	} else {
 		// error handling
 		urlHausHtml.innerText = "threat status: N/A";
@@ -89,58 +89,45 @@ function fillUrlHaus(response) {
 }
 
 
-/* fillCertificateStatus:
+
+
+function fillTrackers(trackingData) {
+	advSet = trackingData.advSet;
+	trackSet = trackingData.trackSet;
+	socSet = trackingData.socSet;
+	// console.log(advSet, socSet, trackSet);
+		
+	var advHTMl = document.getElementById('advSet');
+	var socHTML = document.getElementById('socSet');
+	var trackHTML = document.getElementById('trackSet');
+
+
+	advHTMl.innerText = advSet;
+	socHTML.innerText = socSet;
+	trackHTML.innerText = trackSet;
+}
+
+
+/* fillSSLStatus:
  * @description: takes the data diven from consent.js and uses that data to write to popup.html's
  *					sslCertificate div
  * @input: response - the data given to popup.js from the 
  * @output: void
  */
-function fillCertificateStatus(response) {
-	console.log(response)
+function fillSSLStatus(sslCertificate){	
+    console.log(request);
 	var sslCertificateHTML = document.getElementById("sslCertificate");
 	// console.log(sslCertificateHTML);
-	if (response != null && response.sslCertificate != null) {
-		sslCertificateHTML.innerText = response.sslCertificate;
+	if (sslCertificate != null) {
+		sslCertificateHTML.innerText = request.sslCertificate;
 	} else {
 		// error handling
 		sslCertificateHTML.innerText = "SSL Certificate Status: N/A";
 	}
 }
 
-function fillTrackers(request) {
-	if (request.subject=="cookieList"){
-		advSet= request.data.advSet;
-		trackSet=request.data.trackSet;
-		socSet=request.data.socSet;
-		// console.log(advSet, socSet, trackSet);
-		
-		var advHTMl = document.getElementById('advSet');
-		var socHTML = document.getElementById('socSet');
-		var trackHTML = document.getElementById('trackSet');
 
-
-		advHTMl.innerText = advSet;
-		socHTML.innerText = socSet;
-		trackHTML.innerText = trackSet;
-	}
-}
-
-function fillSSL(request){
-	if(request.subject === "sslCertificate" ) {
-    	console.log(request);
-		var sslCertificateHTML = document.getElementById("sslCertificate");
-		// console.log(sslCertificateHTML);
-		if (request != null && request.sslCertificate != null) {
-			sslCertificateHTML.innerText = request.sslCertificate;
-		} else {
-			// error handling
-			sslCertificateHTML.innerText = "SSL Certificate Status: N/A";
-		}
-    }
-}
-
-
-function fillURLRating(request){
+function fillURLRating(urlRatingData){
 	if (request.subject == "urlAssociations"){
 		/* Fill the URL rating from Content.js' URL information */ 
 		// var urlElement = document.getElementById("urlElement");
@@ -151,11 +138,26 @@ function fillURLRating(request){
 	}
 }
 
+
+function sendToBackground(requestURL, masterHost, masterHref) {
+	chrome.runtime.sendMessage(
+   	{
+    	from: 'popup', 
+       	to: 'background',
+   		subject: 'backgroundReq',
+
+   		requestURL: requestURL,
+   		hostname: masterHost,
+   		href: masterHref,
+
+  	}, function(){});
+}
+
 function fillFromContent(response) {
 
 	console.log("This is the content's response:")
 	console.log(response);
-	if (response != null && response.hostname != null && response.href != null && response.protocol != null) {
+	// if (response != null && response.hostname != null && response.href != null && response.protocol != null) {
 		console.log("got response");
 
 
@@ -171,58 +173,48 @@ function fillFromContent(response) {
 		}
 
 		/* end filling up protocol */
-
-		masterHost=response.hostname;
-		masterHref= response.href
-
+		masterHost = response.hostname;
+		masterHref = response.href
 		pageUrl = response.hostname.replace(/\./g, "");
-		var requestURL = urlAssociations + pageUrl + "/";
-
-		chrome.runtime.sendMessage(
-   		{
-    		from: 'popup', 
-       		to: 'background',
-   			subject: 'urlRating',
-   			requestURL: requestURL,
-  		}, function(){});
-
-		/* send messages to background */
-		// Send message to background.js about the sslCertificate
-	   	chrome.runtime.sendMessage(
-	   		{
-	    		from: 'popup', 
-	       		to: 'background',
-	    		hostname: masterHost,
-	   			subject: 'sslCertificateReq'
-	  		}, function(){});
-
-	   	// Send message to background.js about the trackers hostname
-	  	chrome.runtime.sendMessage(
-	   		{
-	    		from: 'popup', 
-	       		to: 'background',
-	    		hostname: masterHost,
-	   			subject: 'trackersReq'
-	  		}, function(){});
-
-		// Send message to background.js about the urlHaus results
-	    chrome.runtime.sendMessage(
-	    	{
-	        	from: 'popup', 
-	        	to: 'background',
-	        	href: masterHref,
-	    		subject: 'urlHausReq'
-	    	}, function(){});
-	}
+		requestURL = urlAssociations + pageUrl + "/";
+		sendTOBackground(requestURL, masterHost, masterHref);
+	// }
 
 }
 
 
-chrome.runtime.onMessage.addListener( function(request,sender,sendResponse)
+chrome.runtime.onMessage.addListener( function(message,sender,sendResponse)
 {
-	fillSSL(request);
-	fillTrackers(request);
-	fillURLRating(request);
+
+	if (message != null && message.subject != null && message.from == "background") {
+		switch(message.subject){
+			
+			case "urlHausRes":
+				console.log("popup is messaging info about URLHaus");
+				fillUrlHaus(message.threat);
+				break;
+			
+			case "cookieList": //Trackers
+				console.log("popup is messageing info about the protocol");
+				fillTrackers(message.data);
+				break;
+
+			case "sslCertificate":
+				console.log("popup is messaging info about the SSL Certificate");
+				fillSSLStatus(message.sslCertificate);
+				break;
+
+			case "urlRating":
+				console.log("popup is messaging info about the the URL");
+				fillURLRating(message.urlRatingData);
+				break;
+
+			default:
+				console.log("UNEXPECTED MESSAGE");
+				// TODO
+		}
+	}
+
 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////
