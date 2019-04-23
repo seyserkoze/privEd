@@ -110,35 +110,39 @@ function fillTrackers(trackingData) {
 	advSet = trackingData.advSet;
 	trackSet = trackingData.trackSet;
 	socSet = trackingData.socSet;
+	otherSet = trackingData.otherSet;
 	// console.log(advSet, socSet, trackSet);
 		
 	var advHTMl = document.getElementById('advSet');
 	var socHTML = document.getElementById('socSet');
 	var trackHTML = document.getElementById('trackSet');
+	var otherHTML = document.getElementById('otherSet');
 
-
-	advHTMl.innerText = advSet;
-	socHTML.innerText = socSet;
-	trackHTML.innerText = trackSet;
+	advHTMl.innerText = advSet.join("\n");
+	socHTML.innerText = socSet.join("\n");
+	trackHTML.innerText = trackSet.join("\n");
+	otherHTML.innerText = otherSet.join("\n");
 
 	var ctx = document.getElementById('myChart');
 	ctx.height = 100;
 	ctx.width =100;
 
 	data= {
-	        labels: ['Social', 'Analytical', 'Advertising'],
+	        labels: ['Social', 'Analytical', 'Advertising', 'Other'],
 	        datasets: [{
 	            label: 'Distribution of Third Party Trackers',
-	            data: [socSet.length, trackSet.length, advSet.length],
+	            data: [socSet.length, trackSet.length, advSet.length, otherSet.length],
 	            backgroundColor: [
 	                'rgba(255, 99, 132, 1)',
 	                'rgba(54, 162, 235, 1)',
-	                'rgba(255, 206, 86, 1)'
+	                'rgba(255, 206, 86, 1)',
+	                'rgba(206, 255, 112, 1)',
 	            ],
 	            borderColor: [
 	                'rgba(255, 99, 132, 1)',
 	                'rgba(54, 162, 235, 1)',
-	                'rgba(255, 206, 86, 1)'
+	                'rgba(255, 206, 86, 1)',
+	                'rgba(206, 255, 90, 1)',
 	            ],
 	            borderWidth: 1
 	        }]

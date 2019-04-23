@@ -29391,13 +29391,16 @@ function segmentSet(cookieSet, sendResponse){
     var advSet=[];
     var socSet=[];
     var trackSet=[];
+    var otherSet = []
 
+    console.log(cookieSet)
     for (var elem in cookieSet){
 
         var elemCopy = elem;
         if (elem[0]=="."){
             elem= elem.substring(1, elem.length);
         }
+
         if (adv.includes(elem)){
             advSet.push(elem);
         }
@@ -29409,13 +29412,18 @@ function segmentSet(cookieSet, sendResponse){
         if (trackers.includes(elem)){
             trackSet.push(elem);
         }
+
+        else {
+            otherSet.push(elem)
+        }
     }
 
     console.log("sending trackers")
     cookieListData = {
             advSet: advSet,
             socSet: socSet,
-            trackSet: trackSet
+            trackSet: trackSet,
+            otherSet: otherSet
         };
     chrome.runtime.sendMessage({
         subject: "cookieList",
