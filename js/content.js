@@ -13,7 +13,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 		sendResponse({protocol: location.protocol, href: location.href, hostname: location.hostname});
 	}
 
-	return Promise.resolve("Dummy response to keep the console quiet");
+	return true;
 });
 
 
