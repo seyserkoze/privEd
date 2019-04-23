@@ -29276,8 +29276,8 @@ zummis.de`
 function checkURLHaus(url){
     var threatMsg;
 
-    if (malicious_dict[url_check]){
-        threatMsg = "URLHaus detected this website is malicious because of" + malicious_dict[url_check];
+    if (malicious_dict[url]){
+        threatMsg = "URLHaus detected this website is malicious because of" + malicious_dict[url];
     }
 
     else {
