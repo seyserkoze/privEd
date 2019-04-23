@@ -228,7 +228,7 @@ function fillFromContent(response) {
     	{
         	from: 'popup', 
         	to: 'background',
-        	href: response.href,
+        	href: masterHref,
     		subject: 'urlHausReq'
     	});
 
