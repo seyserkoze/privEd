@@ -77,8 +77,8 @@ function fillHTTPStatus(response) {
 
 
 
-
 /* Filling HTML divs from popup.js */
+
 /* fillUrlHaus:
  * @description: takes the data diven from consent.js and uses that data to write to popup.html's
  *					urlHaus div
@@ -97,7 +97,12 @@ function fillUrlHaus(threat) {
 
 
 
-
+/* fillTrackers:
+ * @description: takes the data given from background.js and uses that data to write to popup.html's
+ *					advSet, socSet, trackSet div
+ * @input: response - the data given to popup.js from the 
+ * @output: void
+ */
 function fillTrackers(trackingData) {
 	advSet = trackingData.advSet;
 	trackSet = trackingData.trackSet;
@@ -164,7 +169,6 @@ function fillFromContent(response) {
 
 	console.log("This is the content's response:")
 	console.log(response);
-	// if (response != null && response.hostname != null && response.href != null && response.protocol != null) {
 	console.log("got response");
 
 
@@ -194,8 +198,10 @@ function fillFromContent(response) {
 chrome.runtime.onMessage.addListener( function(message,sender,sendResponse)
 {
 
+	console.log(message);
 	if (message && message.subject) {
 		switch(message.subject){
+			console.log(message.subject)
 			
 			case "urlHausRes":
 				console.log("popup is messaging info about URLHaus");
