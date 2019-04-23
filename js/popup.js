@@ -158,7 +158,7 @@ function fillFromContent(response) {
 	console.log("This is the content's response:")
 	console.log(response);
 	// if (response != null && response.hostname != null && response.href != null && response.protocol != null) {
-		console.log("got response");
+	console.log("got response");
 
 
 		/* Fill the HTTP Status from content.js' protocol information */
@@ -177,7 +177,7 @@ function fillFromContent(response) {
 		masterHref = response.href
 		pageUrl = response.hostname.replace(/\./g, "");
 		requestURL = urlAssociations + pageUrl + "/";
-		sendTOBackground(requestURL, masterHost, masterHref);
+		sendToBackground(requestURL, masterHost, masterHref);
 	// }
 
 }
