@@ -4,7 +4,6 @@ window.onload=function(){
 
 
 	var cert = document.getElementById("cert");
-	console.log(cert)
 
 	cert.addEventListener("click", function(event){
 		console.log("track clicked");
