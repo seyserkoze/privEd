@@ -29275,14 +29275,12 @@ zummis.de`
 
 function getURLAssociations(requestURL){
     $.get(requestURL, function( data ) {
-
           var urlRatingData = data.rating;
-          chrome.runtime.sendMessage({urlRatingData: urlRatingData}, function(){});
-
+          chrome.runtime.sendMessage({subject: 'urlAssociations', urlRatingData: urlRatingData}, function(){});
           });
 }
 
-function checkSSLCertificate(url, sendResponse) {
+function checkSSLCertificate(url) {
 
     url = (url[url.length-1] == "/") ? url.substring(0, url.length - 1) : url;
     var validity_window;
@@ -29485,6 +29483,7 @@ chrome.runtime.onMessage.addListener(
         }
 
         else if (request.subject="sslCertificateReq"){
+            console.log(request);
             checkSSLCertificate(request.hostname);
             
         }
