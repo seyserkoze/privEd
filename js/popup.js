@@ -155,15 +155,29 @@ function fillFromContent(response) {
 
 	console.log("This is the content's response:")
 	console.log(response);
-	if (response != null && response.hostname != null && response.href != null) {
+	if (response != null && response.hostname != null && response.href != null && response.protocol != null) {
 		console.log("got response");
+
+
+		/* Fill the HTTP Status from content.js' protocol information */
+		var protocolElement = document.getElementById('protocolElement');
+		
+		if (0 == response.protocol.localeCompare("https:")) {
+			protocolElement.innerHTML = "HTTP Status: This website is secure by SSL TLS";
+		} else if (0 == response.protocol.localeCompare("http:")){
+			protocolElement.innerHTML = "HTTP Status: This webiste is not secure by SSL TLS";
+		} else {
+			protocolElement.innerHTML = "HTTP Status: N/A";
+		}
+
+		/* end filling up protocol */
 
 		masterHost=response.hostname;
 		masterHref= response.href
 
 		pageUrl = response.hostname.replace(/\./g, "");
-
 		var requestURL = urlAssociations + pageUrl + "/";
+
 		chrome.runtime.sendMessage(
    		{
     		from: 'popup', 
@@ -171,22 +185,6 @@ function fillFromContent(response) {
    			subject: 'urlRating',
    			requestURL: requestURL,
   		}, function(){});
-	
-		/* Fill the HTTP Status from content.js' protocol information */
-		var protocolElement = document.getElementById('protocolElement');
-		if (response != null && response.protocol != null) {
-			if (0 == response.protocol.localeCompare("https:")) {
-				protocolElement.innerHTML = "HTTP Status: This website is secure by SSL TLS";
-			} else if (0 == response.protocol.localeCompare("http:")){
-				protocolElement.innerHTML = "HTTP Status: This webiste is not secure by SSL TLS";
-			} else {
-				protocolElement.innerHTML = "HTTP Status: N/A";
-			}
-		} else {
-			// TODO: error handling
-			protocolElement.innerHTML = "HTTP Status: N/A";
-		}
-
 
 		/* send messages to background */
 		// Send message to background.js about the sslCertificate
@@ -215,7 +213,6 @@ function fillFromContent(response) {
 	        	href: masterHref,
 	    		subject: 'urlHausReq'
 	    	}, function(){});
-
 	}
 
 }
@@ -223,11 +220,9 @@ function fillFromContent(response) {
 
 chrome.runtime.onMessage.addListener( function(request,sender,sendResponse)
 {
-
 	fillSSL(request);
 	fillTrackers(request);
 	fillURLRating(request);
-
 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////
