@@ -194,7 +194,7 @@ function fillFromContent(response) {
 chrome.runtime.onMessage.addListener( function(message,sender,sendResponse)
 {
 
-	if (message && message.subject && message.from == "background") {
+	if (message && message.subject) {
 		switch(message.subject){
 			
 			case "urlHausRes":
