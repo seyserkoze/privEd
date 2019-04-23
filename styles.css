@@ -23,6 +23,7 @@ h1 {
 
 #urlHaus{
 	padding: 10px;
+	text-align: center;
 }
 
 #urlRatingElement {
@@ -50,6 +51,7 @@ h1 {
 
 
 .tab {
+  margin-top: 10px;
   overflow: hidden;
   border: 1px solid #ccc;
   background-color: lightblue;
@@ -68,11 +70,13 @@ h1 {
   transition: 0.3s;
   display: inline-block;
   text-align: center;
+  font-weight: bold;
 }
 
 /* Change background color of buttons on hover */
 .tab div:hover {
   background-color: dodgerblue;
+  color: white;
 }
 
 /* Create an active/current tablink class */
@@ -82,8 +86,9 @@ h1 {
 
 /* Style the tab content */
 .tabcontent {
+  text-align: center;
   display: none;
-  padding: 6px 12px;
+  padding: 20px 10px 10px 10px;
   border: 1px solid #ccc;
   border-top: none;
 }
