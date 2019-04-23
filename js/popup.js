@@ -127,7 +127,6 @@ function fillTrackers(trackingData) {
  * @output: void
  */
 function fillSSLStatus(sslCertificate){	
-    console.log(request);
 	var sslCertificateHTML = document.getElementById("sslCertificate");
 	// console.log(sslCertificateHTML);
 	if (sslCertificate != null) {
@@ -144,7 +143,7 @@ function fillURLRating(urlRatingData){
 	// var urlElement = document.getElementById("urlElement");
 	var urlRatingElement = document.getElementById("urlRatingElement");
 		
-	urlRatingData = request.urlRatingData; // Global
+	urlRatingData = urlRatingData; // Global
 	urlRatingElement.innerText = "URL Rating: " + urlRatingData;
 }
 
