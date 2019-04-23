@@ -25,6 +25,29 @@ h1 {
 	padding: 10px;
 }
 
+#urlRatingElement {
+	display: inline-block;
+	color: black;
+	font-family: Helvetica;
+}
+
+#thumbsUp {
+	float: left;
+}
+
+#thumbsDown {
+	float: right;
+	color: red;
+}
+
+#ratings {
+	display: inline-block;
+	color: green;
+	width: 30%;
+	margin-left: 35%;
+	text-align: center;
+}
+
 
 .tab {
   overflow: hidden;

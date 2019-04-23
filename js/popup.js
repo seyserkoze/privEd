@@ -33,7 +33,14 @@ function thumbs(){
 		request.open('PATCH', requestURL, false);
 		request.setRequestHeader("Content-type","application/json");
 		request.send(JSON.stringify(patch));
-		console.log("PATCH SUCCESS");
+		console.log(request.responseText);
+		urlRatingData = JSON.parse(request.responseText).rating;
+		console.log(urlRatingData);
+		fillURLRating(urlRatingData);
+
+		chrome.runtime.sendMessage({subject: "updateRating", urlRatingData: urlRatingData});
+
+		console.log(request.responseText);
 	}
 
 	document.getElementById("thumbsDown").onclick = function() {
@@ -137,12 +144,12 @@ function fillSSLStatus(sslCertificate){
 }
 
 
-function fillURLRating(urlRatingData){
+function fillURLRating(rating){
 	/* Fill the URL rating from Content.js' URL information */ 
 	// var urlElement = document.getElementById("urlElement");
 	var urlRatingElement = document.getElementById("urlRatingElement");
 		
-	urlRatingData = urlRatingData; // Global
+	urlRatingData = rating; // Global
 	urlRatingElement.innerText = "URL Rating: " + urlRatingData;
 }
 
@@ -174,6 +181,7 @@ chrome.runtime.onMessage.addListener( function(message,sender,sendResponse)
 			case "protocolRes":
 				console.log("popup is messaging info about protocol")
 				fillProtocol(message.protocol);
+				pageUrl = message.pageUrl
 				break;
 			
 			case "urlHausRes":
@@ -211,6 +219,8 @@ window.onload = function(){
 	chrome.runtime.sendMessage({subject: "needInfo"}, function(message){
 		console.log("response after window load was");
         console.log(message);
+        pageUrl = message.pageUrl
+
         fillProtocol(message.protocol);
         fillUrlHaus(message.threat);
         fillTrackers(message.data);

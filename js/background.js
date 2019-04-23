@@ -29299,7 +29299,7 @@ function checkProtocol(protocol){
         protocolText = "HTTP Status: N/A";
     }
 
-    chrome.runtime.sendMessage({subject: 'protocolRes', protocol: protocolText }, function(){
+    chrome.runtime.sendMessage({subject: 'protocolRes', protocol: protocolText, pageUrl: pageUrl }, function(){
         console.log("protocol posted was" + protocolText);
     });
 }
@@ -29521,11 +29521,14 @@ chrome.runtime.onMessage.addListener(
         // console.log(malicious_dict['"http://52.90.151.246/Obtc/ShadowMonitorTool35.jpg"']);
 
         if (request.subject=="needInfo"){
-            var response = {protocol: protocolText, threat: threatText, 
+            var response = {protocol: protocolText, threat: threatText, pageUrl: pageUrl,
                 data: cookieListData, sslCertificate: validity_window, urlRatingData: urlRatingData }
             sendResponse(response)
         }
 
+        if (request.subject == "updateRating"){
+            urlRatingData = request.urlRatingData;
+        }
         return true;
     }
 );
