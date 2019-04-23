@@ -29272,18 +29272,22 @@ zummis.de`
 
 var malicious_dict = {};
 var tabDomain;
-var masterHost;
-var masterHref;
-var protocol;
+
 var outputVar;
 var serverIP = "http://128.237.199.215";
 var serverPort = "8000";
 var urlAssociations = serverIP + ":" + serverPort + "/URLAssociations/";
 var pageUrl = null;
 
+var masterHost;
+var masterHref;
+var protocol;
 
 var protocolText;
 var threatText;
+var validity_window;
+var cookieListData;
+var urlRatingData;
 
 function checkProtocol(protocol){
 
@@ -29319,7 +29323,7 @@ function checkURLHaus(url){
 function checkSSLCertificate(url) {
 
     url = (url[url.length-1] == "/") ? url.substring(0, url.length - 1) : url;
-    var validity_window;
+    
     var payload= {r: 126, 
                   host: url}
     $.post("https://www.digicert.com/api/check-host.php", payload)
@@ -29337,7 +29341,7 @@ function checkSSLCertificate(url) {
 
 function getURLAssociations(requestURL){
     $.get(requestURL, function( data ) {
-          var urlRatingData = data.rating;
+          urlRatingData = data.rating;
           console.log("rating is " + urlRatingData);
           chrome.runtime.sendMessage({subject: 'urlRating', urlRatingData: urlRatingData}, function(){});
           });
@@ -29407,13 +29411,14 @@ function segmentSet(cookieSet, sendResponse){
     }
 
     console.log("sending trackers")
-    chrome.runtime.sendMessage({
-        subject: "cookieList",
-        data: {
+    cookieListData = {
             advSet: advSet,
             socSet: socSet,
             trackSet: trackSet
-        }
+        };
+    chrome.runtime.sendMessage({
+        subject: "cookieList",
+        data: cookieListData
     }, function() {})
 }
 
@@ -29477,7 +29482,6 @@ chrome.runtime.onInstalled.addListener(function() {
         }
     });
 
-    console.log('donnnneeee');
 });
 
 
@@ -29502,8 +29506,6 @@ chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
     pageUrl = masterHost.replace(/\./g, "");
     var requestURL = urlAssociations + pageUrl + "/";
 
-    console.log(requestURL, url_check, masterHost);
-
     checkProtocol(protocol);
     checkURLHaus(url_check);
     checkSSLCertificate(masterHost);
@@ -29513,28 +29515,17 @@ chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
 })
 
 
-// chrome.runtime.onMessage.addListener(
-//     function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
         
-//         // console.log(malicious_dict['"http://52.90.151.246/Obtc/ShadowMonitorTool35.jpg"']);
+        // console.log(malicious_dict['"http://52.90.151.246/Obtc/ShadowMonitorTool35.jpg"']);
 
-//         if (request.subject=="backgroundReq"){
-//             var url_check = '"'+request.href+'"';
+        if (request.subject=="needInfo"){
+            var response = {protocol: protocolText, threat: threatText, 
+                data: cookieListData, sslCertificate: validity_window, urlRatingData: urlRatingData }
+            sendResponse(response)
+        }
 
-//             tabDomain = request.hostname.toString();
-//             var wwwIndex = tabDomain.indexOf('www.');  
-//             if (wwwIndex>-1){
-//                 tabDomain = tabDomain.substring(wwwIndex+4, tabDomain.length);
-//             }
-
-//             console.log(request.requestURL, url_check, request.hostname);
-
-//             checkURLHaus(url_check);   
-//             checkSSLCertificate(request.hostname);
-//             getURLAssociations(request.requestURL);
-//             buildCookieList();   
-//         }
-
-//         return true;
-//     }
-// );
+        return true;
+    }
+);

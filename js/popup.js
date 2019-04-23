@@ -207,6 +207,17 @@ chrome.runtime.onMessage.addListener( function(message,sender,sendResponse)
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 window.onload = function(){
+
+	chrome.runtime.sendMessage({subject: "needInfo"}, function(message){
+		console.log("response after window load was");
+        console.log(message);
+        fillProtocol(message.protocol);
+        fillUrlHaus(message.threat);
+        fillTrackers(message.data);
+        fillSSLStatus(message.sslCertificate);
+        fillURLRating(message.urlRatingData);
+
+	})
 	thumbs();
 };
 
