@@ -10,14 +10,11 @@
 var advSet;
 var socSet;
 var trackSet;
-var serverIP = "http://128.237.199.215";
-var serverPort = "8000";
 var urlAssociations = serverIP + ":" + serverPort + "/URLAssociations/";
 
 var pageUrl = null;
 var urlRatingData = null;
-var masterHost;
-var masterHref;
+
 
 
 /* Onclick Behavior for the thumbs up & thumbs down */
@@ -88,7 +85,7 @@ function fillHTTPStatus(response) {
 function fillUrlHaus(threat) {
 	var urlHausHtml = document.getElementById("urlHaus");
 	if (threat != null) {
-		urlHausHtml.innerText = threat;
+		urlHausHtml.innerHTML = threat;
 	} else {
 		// error handling
 		urlHausHtml.innerText = "threat status: N/A";
@@ -148,57 +145,34 @@ function fillURLRating(urlRatingData){
 }
 
 
-function sendToBackground(requestURL, masterHost, masterHref) {
-	chrome.runtime.sendMessage(
-   	{
-    	from: 'popup', 
-       	to: 'background',
-   		subject: 'backgroundReq',
-
-   		requestURL: requestURL,
-   		hostname: masterHost,
-   		href: masterHref,
-
-  	}, function(){});
-}
-
-function fillFromContent(response) {
-
-	console.log("This is the content's response:")
-	console.log(response);
-	console.log("got response");
-
-
-	if (response){
-		/* Fill the HTTP Status from content.js' protocol information */
-		var protocolElement = document.getElementById('protocolElement');
+	
+		// var protocolElement = document.getElementById('protocolElement');
 		
-		if (0 == response.protocol.localeCompare("https:")) {
-			protocolElement.innerHTML = "HTTP Status: This website is secure by SSL TLS";
-		} else if (0 == response.protocol.localeCompare("http:")){
-			protocolElement.innerHTML = "HTTP Status: This webiste is not secure by SSL TLS";
-		} else {
-			protocolElement.innerHTML = "HTTP Status: N/A";
-		}
+		// if (0 == response.protocol.localeCompare("https:")) {
+		// 	protocolElement.innerHTML = "HTTP Status: This website is secure by SSL TLS";
+		// } else if (0 == response.protocol.localeCompare("http:")){
+		// 	protocolElement.innerHTML = "HTTP Status: This webiste is not secure by SSL TLS";
+		// } else {
+		// 	protocolElement.innerHTML = "HTTP Status: N/A";
+		// }
 
-		/* end filling up protocol */
-		masterHost = response.hostname;
-		masterHref = response.href
-		pageUrl = response.hostname.replace(/\./g, "");
-		requestURL = urlAssociations + pageUrl + "/";
-		sendToBackground(requestURL, masterHost, masterHref);
-	}
 
+function fillProtocol(text){
+	var protocolElement = document.getElementById('protocolElement');
+	protocolElement.innerHTML = text;
 }
-
 
 chrome.runtime.onMessage.addListener( function(message,sender,sendResponse)
 {
-
 	console.log(message);
 	
 	if (message && message.subject) {
 		switch(message.subject){
+
+			case "protocolRes":
+				console.log("popup is messaging info about protocol")
+				fillProtocol(message.protocolText);
+				break;
 			
 			case "urlHausRes":
 				console.log("popup is messaging info about URLHaus");
@@ -231,18 +205,6 @@ chrome.runtime.onMessage.addListener( function(message,sender,sendResponse)
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 window.onload = function(){
-	chrome.tabs.query({ active: true, currentWindow: true}, 
-    	function (tabs) {
-    		chrome.tabs.sendMessage(
-    			tabs[0].id,
-    			{
-    				from: 'popup',
-    				to: 'content',
-    				subject: 'contentReq'
-    			},
-    			fillFromContent);
-    	}
-    );
 	thumbs();
 };
 

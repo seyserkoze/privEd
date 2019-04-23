@@ -8,7 +8,15 @@
 
 var malicious_dict = {};
 var tabDomain;
+var masterHost;
+var masterHref;
+var protocol;
 var outputVar;
+var serverIP = "http://128.237.199.215";
+var serverPort = "8000";
+var urlAssociations = serverIP + ":" + serverPort + "/URLAssociations/";
+var pageUrl = null;
+
 var adv = `000freexxx.com
 004.frnl.de
 01sexe.com
@@ -29273,28 +29281,39 @@ zsrpc.net
 zummis.de`
 
 
+var protocolText;
+var threatText;
+
+function checkProtocol(protocol){
+
+    if (protocol.localeCompare("https:") == 0) {
+        protocolText = "HTTP Status: This website is secure by SSL TLS";
+    } else if (protocol.localeCompare("http:")==0){
+        pprotocolText = "HTTP Status: This webiste is not secure by SSL TLS";
+    } else {
+        protocolText = "HTTP Status: N/A";
+    }
+
+    chrome.runtime.sendMessage({subject: 'protocolRes', protocol: protocolText }, function(){
+        console.log("protocol posted was" + protocolText);
+    });
+}
+
 function checkURLHaus(url){
-    var threatMsg;
 
     if (malicious_dict[url]){
-        threatMsg = "URLHaus detected this website is malicious because of" + malicious_dict[url];
+        threatText = "URLHaus detected this website is malicious because of" + malicious_dict[url] + ".";
     }
 
     else {
-        threatMsg = "No Threat Detected";
+        threatText = "No Threat Detected according to URLHaus.";
     }
 
-    console.log("threat is " + threatMsg);
-    chrome.runtime.sendMessage({subject: 'urlHausRes', threat: threatMsg}, function(){});
+    threatText += "<a href='https://urlhaus.abuse.ch/' target='_blank'> More information here </a>"
+    console.log("threat is " + threatText);
+    chrome.runtime.sendMessage({subject: 'urlHausRes', threat: threatText}, function(){});
 }
 
-function getURLAssociations(requestURL){
-    $.get(requestURL, function( data ) {
-          var urlRatingData = data.rating;
-          console.log("rating is " + urlRatingData);
-          chrome.runtime.sendMessage({subject: 'urlRating', urlRatingData: urlRatingData}, function(){});
-          });
-}
 
 function checkSSLCertificate(url) {
 
@@ -29313,6 +29332,14 @@ function checkSSLCertificate(url) {
             chrome.runtime.sendMessage({ subject: "sslCertificate", sslCertificate : validity_window}, function(){});
         });
 
+}
+
+function getURLAssociations(requestURL){
+    $.get(requestURL, function( data ) {
+          var urlRatingData = data.rating;
+          console.log("rating is " + urlRatingData);
+          chrome.runtime.sendMessage({subject: 'urlRating', urlRatingData: urlRatingData}, function(){});
+          });
 }
 
 //url1 is the cookie url and url2 is the hostname
@@ -29449,31 +29476,64 @@ chrome.runtime.onInstalled.addListener(function() {
         }
     });
 
+    console.log('donnnneeee');
 });
 
 
-chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-        
-        // console.log(malicious_dict['"http://52.90.151.246/Obtc/ShadowMonitorTool35.jpg"']);
+chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
 
-        console.log(request);
+ 
+  if (changeInfo.status == 'complete' && tab.active) {
 
-        if (request.subject=="backgroundReq"){
-            var url_check = '"'+request.href+'"';
+    var url = new URL(tab.url);
+    masterHost = url.hostname;
+    protocol = url.protocol;
+    masterHref = url.href;
 
-            tabDomain = request.hostname.toString();
-            var wwwIndex = tabDomain.indexOf('www.');  
-            if (wwwIndex>-1){
-                tabDomain = tabDomain.substring(wwwIndex+4, tabDomain.length);
-            }
-
-            checkURLHaus(url_check);
-            buildCookieList();      
-            checkSSLCertificate(request.hostname);
-            getURLAssociations(request.requestURL);
-        }
-
-        return true;
+    console.log('tab updated')
+    var url_check = '"' + masterHref + '"';
+    tabDomain = masterHost.toString();
+    var wwwIndex = tabDomain.indexOf('www.');  
+    if (wwwIndex>-1){
+        tabDomain = tabDomain.substring(wwwIndex+4, tabDomain.length);
     }
-);
+
+    pageUrl = masterHost.replace(/\./g, "");
+    var requestURL = urlAssociations + pageUrl + "/";
+
+    console.log(requestURL, url_check, masterHost);
+
+    checkProtocol(protocol);
+    checkURLHaus(url_check);
+    checkSSLCertificate(masterHost);
+    getURLAssociations(requestURL);
+    buildCookieList();
+  }
+})
+
+
+// chrome.runtime.onMessage.addListener(
+//     function(request, sender, sendResponse) {
+        
+//         // console.log(malicious_dict['"http://52.90.151.246/Obtc/ShadowMonitorTool35.jpg"']);
+
+//         if (request.subject=="backgroundReq"){
+//             var url_check = '"'+request.href+'"';
+
+//             tabDomain = request.hostname.toString();
+//             var wwwIndex = tabDomain.indexOf('www.');  
+//             if (wwwIndex>-1){
+//                 tabDomain = tabDomain.substring(wwwIndex+4, tabDomain.length);
+//             }
+
+//             console.log(request.requestURL, url_check, request.hostname);
+
+//             checkURLHaus(url_check);   
+//             checkSSLCertificate(request.hostname);
+//             getURLAssociations(request.requestURL);
+//             buildCookieList();   
+//         }
+
+//         return true;
+//     }
+// );

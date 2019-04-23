@@ -7,13 +7,13 @@
  */
 
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
-	if (request.from == "popup" && request.subject == "contentReq") {
-		console.log(location.protocol, location.href, location.hostname);
-		sendResponse({protocol: location.protocol, href: location.href, hostname: location.hostname});
-	}
+// chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
+// 	if (request.from == "popup" && request.subject == "contentReq") {
+// 		console.log(location.protocol, location.href, location.hostname);
+// 		sendResponse({protocol: location.protocol, href: location.href, hostname: location.hostname});
+// 	}
 
-	return true;
-});
+// 	return true;
+// });
 
 
