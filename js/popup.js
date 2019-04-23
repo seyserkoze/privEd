@@ -155,17 +155,27 @@ function fillTrackers(response) {
 
 
 function fillFromContent(response) {
-	console.log(response);
 
-	masterHost=response.hostname;
-	masterHref= response.href
+	if (response != null && response.hostname != null && response.href != null) {
+		console.log("got response");
 
-	/* Fill the URL rating from Content.js' URL information */ 
-	var urlElement = document.getElementById("urlElement");
-	var urlRatingElement = document.getElementById("urlRatingElement");
+		masterHost=response.hostname;
+		masterHref= response.href
+
+		pageUrl = response.hostname.replace(/\./g, "");
+
+		var requestURL = urlAssociations + pageUrl + "/";
+		chrome.runtime.sendMessage(
+   		{
+    		from: 'popup', 
+       		to: 'background',
+   			subject: 'urlRating',
+   			requestURL: requestURL,
+  		});
+
 	
-	// if (response != null && response.hostname != null) {
-	// 	urlElement.innerText = "URL: " + response.hostnamel;
+	// if (masterHost != null) {
+	// 	urlElement.innerText = "URL: " + response.hostname;
 	// 	pageUrl = response.hostname.replace(/\./g, "");
 
 	// 	var requestURL = urlAssociations + pageUrl + "/";
@@ -174,6 +184,7 @@ function fillFromContent(response) {
 	// 		urlRatingElement.innerText = "URL Rating: " + urlRatingData;
 	// 	});
 	// }
+	}
 
 
 	/* Fill the HTTP Status from content.js' protocol information */
@@ -253,6 +264,15 @@ chrome.runtime.onMessage.addListener( function(request,sender,sendResponse)
 		advHTML.innerText = advSet;
 		socHTML.innerText = socSet;
 		trackHTML.innerText = trackSet;
+	}
+
+	if (request.subject == "urlAssociations"){
+		/* Fill the URL rating from Content.js' URL information */ 
+		// var urlElement = document.getElementById("urlElement");
+		var urlRatingElement = document.getElementById("urlRatingElement");
+		
+		urlRatingData = data.rating; // Global
+		urlRatingElement.innerText = "URL Rating: " + urlRatingData;
 	}
 
 });
