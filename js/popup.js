@@ -19,41 +19,40 @@ var urlRatingData = null;
 
 
 
+
+function deliverPatch(incr){
+	var patch = {
+		"rating" : urlRatingData + incr
+	}
+	var request = new XMLHttpRequest();
+	var requestURL = urlAssociations + pageUrl + "/";
+	console.log(requestURL);
+	request.open('PATCH', requestURL, false);
+	request.setRequestHeader("Content-type","application/json");
+	request.send(JSON.stringify(patch));
+	console.log(request.responseText);
+	urlRatingData = JSON.parse(request.responseText).rating;
+	console.log(urlRatingData);
+	fillURLRating(urlRatingData);
+
+	chrome.runtime.sendMessage({subject: "updateRating", urlRatingData: urlRatingData});
+
+	console.log(request.responseText);
+}
+
+
 /* Onclick Behavior for the thumbs up & thumbs down */
 
 function thumbs(){
 	document.getElementById("thumbsUp").onclick = function() {
 		// PATCH Request 
-		var patch = {
-    		"rating" : urlRatingData + 1
-		}
-		var request = new XMLHttpRequest();
-		var requestURL = urlAssociations + pageUrl + "/";
-		console.log(requestURL);
-		request.open('PATCH', requestURL, false);
-		request.setRequestHeader("Content-type","application/json");
-		request.send(JSON.stringify(patch));
-		console.log(request.responseText);
-		urlRatingData = JSON.parse(request.responseText).rating;
-		console.log(urlRatingData);
-		fillURLRating(urlRatingData);
-
-		chrome.runtime.sendMessage({subject: "updateRating", urlRatingData: urlRatingData});
-
-		console.log(request.responseText);
+		deliverPatch(1);
+		
 	}
 
 	document.getElementById("thumbsDown").onclick = function() {
 		// PATCH Request
-		var patch = {
-    		"rating" : urlRatingData - 1
-		}
-		var request = new XMLHttpRequest();
-		var requestURL = urlAssociations + pageUrl + "/";
-		request.open('PATCH', requestURL, false);
-		request.setRequestHeader("Content-type","application/json");
-		request.send(JSON.stringify(patch));
-		console.log("PATCH SUCCESS");
+		deliverPatch(-1);
 	}
 }
 
