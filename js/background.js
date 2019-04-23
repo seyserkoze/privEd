@@ -29286,17 +29286,13 @@ function checkSSLCertificate(url) {
     var validity_window;
     var payload= {r: 126, 
                   host: url}
-    console.log(payload);
     $.post("https://www.digicert.com/api/check-host.php", payload)
         .done(function(data){
-            // console.log(data);
             var parser = new DOMParser();
             var htmlDoc = parser.parseFromString(data, 'text/html');
 
             const TDs = htmlDoc.getElementsByTagName("td");
             validity_window = "Certificate is " + TDs[17].innerText;
-            console.log("validity_window")
-            console.log(validity_window);
             chrome.runtime.sendMessage({ subject: "sslCertificate", sslCertificate : validity_window}, function(){});
         });
 
@@ -29329,7 +29325,6 @@ function buildThirdPartyCookies(cookies){
         
         if (wwwInd>-1){
             currDomain = currDomain.substring(wwwInd+4, currDomain.length);
-            console.log(currDomain);
         }
         
         if (!isSubDomain(currDomain, tabDomain)){
@@ -29339,7 +29334,6 @@ function buildThirdPartyCookies(cookies){
         }
     }
 
-    console.log(thirdPartySet)
     return thirdPartySet;
 }
 
@@ -29366,10 +29360,6 @@ function segmentSet(cookieSet, sendResponse){
             trackSet.push(elem);
         }
     }
-
-    console.log(advSet)
-    console.log(socSet)
-    console.log(trackSet)
 
     chrome.runtime.sendMessage({
         subject: "cookieList",
@@ -29402,7 +29392,6 @@ function buildCookieList(){
         ];
 
 
-        console.log(cookies)
         // do something with the cookies here
         var thirdPartySet = buildThirdPartyCookies(cookies);
 
@@ -29418,8 +29407,6 @@ chrome.runtime.onInstalled.addListener(function() {
     adv = adv.split('\n');
     social = social.split('\n');
     trackers = trackers.split('\n');
-
-    console.log(adv)
 
     //build up csv data of malicious websites from URLHaus
     $.get("https://urlhaus.abuse.ch/downloads/csv/", function(data){
@@ -29449,6 +29436,8 @@ chrome.runtime.onMessage.addListener(
         
         // console.log(malicious_dict['"http://52.90.151.246/Obtc/ShadowMonitorTool35.jpg"']);
 
+        console.log(request);
+
         if (request.subject=="urlHausReq"){
             var url_check = '"'+request.href+'"';
             if (malicious_dict[url_check]){
@@ -29471,19 +29460,18 @@ chrome.runtime.onMessage.addListener(
 
         else if (request.subject=="trackersReq"){
             tabDomain = request.hostname.toString();
-            console.log('trackersReq')
-            console.log(request)
             var wwwIndex = tabDomain.indexOf('www.');
            
             if (wwwIndex>-1){
                 tabDomain = tabDomain.substring(wwwIndex+4, tabDomain.length);
             }
-            console.log(tabDomain)
             buildCookieList();      
         }
 
         else if (request.subject="sslCertificateReq"){
-            console.log(request);
+            console.log('ssl')
+            console.log(request)
+            console.log('exit')
             checkSSLCertificate(request.hostname);
             
         }

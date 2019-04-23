@@ -107,43 +107,17 @@ function fillCertificateStatus(response) {
 	}
 }
 
-
-/* fillUrlRating:
- * @description: takes the data diven from consent.js and uses that data to write to popup.html's
- *					sslCertificate div
- * @input: response - the data given to popup.js from the 
- * @output: void
- */
-function fillUrlRating(response) {
-	var urlElement = document.getElementById("urlElement");
-	var urlRatingElement = document.getElementById("urlRatingElement");
-	if (response != null && response.url != null) {
-		urlElement.innerText = "URL: " + response.url;
-		pageUrl = response.url.replace(/\./g, "");
-
-		var requestURL = urlAssociations + pageUrl + "/";
-		$.get(requestURL, function( data ) {
-			urlRatingData = data.rating;
-			urlRatingElement.innerText = "URL Rating: " + urlRatingData;
-		});
-
-	}
-}
-
-function fillTrackers(response) {
-	console.log(response)
-	console.log(response)
-	if (response.subject=="cookieList"){
-		advSet= response.data.advSet;
-		trackSet=response.data.trackSet;
-		socSet=response.data.socSet;
+function fillTrackers(request) {
+	if (request.subject=="cookieList"){
+		advSet= request.data.advSet;
+		trackSet=request.data.trackSet;
+		socSet=request.data.socSet;
 		// console.log(advSet, socSet, trackSet);
 		
 		var advHTMl = document.getElementById('advSet');
 		var socHTML = document.getElementById('socSet');
 		var trackHTML = document.getElementById('trackSet');
 
-		console.log(advHTML);
 
 		advHTMl.innerText = advSet;
 		socHTML.innerText = socSet;
@@ -151,8 +125,31 @@ function fillTrackers(response) {
 	}
 }
 
+function fillSSL(request){
+	if(request.subject === "sslCertificate" ) {
+    	console.log(request);
+		var sslCertificateHTML = document.getElementById("sslCertificate");
+		// console.log(sslCertificateHTML);
+		if (request != null && request.sslCertificate != null) {
+			sslCertificateHTML.innerText = request.sslCertificate;
+		} else {
+			// error handling
+			sslCertificateHTML.innerText = "SSL Certificate Status: N/A";
+		}
+    }
+}
 
 
+function fillURLRating(request){
+	if (request.subject == "urlAssociations"){
+		/* Fill the URL rating from Content.js' URL information */ 
+		// var urlElement = document.getElementById("urlElement");
+		var urlRatingElement = document.getElementById("urlRatingElement");
+		
+		urlRatingData = request.urlRatingData; // Global
+		urlRatingElement.innerText = "URL Rating: " + urlRatingData;
+	}
+}
 
 function fillFromContent(response) {
 
@@ -173,108 +170,63 @@ function fillFromContent(response) {
        		to: 'background',
    			subject: 'urlRating',
    			requestURL: requestURL,
-  		});
-
+  		}, function(){});
 	
-	// if (masterHost != null) {
-	// 	urlElement.innerText = "URL: " + response.hostname;
-	// 	pageUrl = response.hostname.replace(/\./g, "");
-
-	// 	var requestURL = urlAssociations + pageUrl + "/";
-	// 	$.get(requestURL, function( data ) {
-	// 		urlRatingData = data.rating;
-	// 		urlRatingElement.innerText = "URL Rating: " + urlRatingData;
-	// 	});
-	// }
-	}
-
-
-	/* Fill the HTTP Status from content.js' protocol information */
-	var protocolElement = document.getElementById('protocolElement');
-	if (response != null && response.protocol != null) {
-		if (0 == response.protocol.localeCompare("https:")) {
-			protocolElement.innerHTML = "HTTP Status: This website is secure by SSL TLS";
-		} else if (0 == response.protocol.localeCompare("http:")){
-			protocolElement.innerHTML = "HTTP Status: This webiste is not secure by SSL TLS";
+		/* Fill the HTTP Status from content.js' protocol information */
+		var protocolElement = document.getElementById('protocolElement');
+		if (response != null && response.protocol != null) {
+			if (0 == response.protocol.localeCompare("https:")) {
+				protocolElement.innerHTML = "HTTP Status: This website is secure by SSL TLS";
+			} else if (0 == response.protocol.localeCompare("http:")){
+				protocolElement.innerHTML = "HTTP Status: This webiste is not secure by SSL TLS";
+			} else {
+				protocolElement.innerHTML = "HTTP Status: N/A";
+			}
 		} else {
+			// TODO: error handling
 			protocolElement.innerHTML = "HTTP Status: N/A";
 		}
-	} else {
-		// TODO: error handling
-		protocolElement.innerHTML = "HTTP Status: N/A";
+
+
+		/* send messages to background */
+		// Send message to background.js about the sslCertificate
+	   	chrome.runtime.sendMessage(
+	   		{
+	    		from: 'popup', 
+	       		to: 'background',
+	    		hostname: masterHost,
+	   			subject: 'sslCertificateReq'
+	  		}, function(){});
+
+	   	// Send message to background.js about the trackers hostname
+	  	chrome.runtime.sendMessage(
+	   		{
+	    		from: 'popup', 
+	       		to: 'background',
+	    		hostname: masterHost,
+	   			subject: 'trackersReq'
+	  		}, function(){});
+
+		// Send message to background.js about the urlHaus results
+	    chrome.runtime.sendMessage(
+	    	{
+	        	from: 'popup', 
+	        	to: 'background',
+	        	href: masterHref,
+	    		subject: 'urlHausReq'
+	    	}, function(){});
+
 	}
-
-
-	/* send messages to background */
-	// Send message to background.js about the sslCertificate
-   	chrome.runtime.sendMessage(
-   		{
-    		from: 'popup', 
-       		to: 'background',
-    		hostname: masterHost,
-   			subject: 'sslCertificateReq'
-  		}, function(){});
-
-   	// Send message to background.js about the trackers hostname
-  	chrome.runtime.sendMessage(
-   		{
-    		from: 'popup', 
-       		to: 'background',
-    		hostname: masterHost,
-   			subject: 'trackersReq'
-  		}, function(){});
-
-	// Send message to background.js about the urlHaus results
-    chrome.runtime.sendMessage(
-    	{
-        	from: 'popup', 
-        	to: 'background',
-        	href: masterHref,
-    		subject: 'urlHausReq'
-    	}, function(){});
 
 }
 
 
 chrome.runtime.onMessage.addListener( function(request,sender,sendResponse)
 {
-    if(request.subject === "sslCertificate" ) {
-    	console.log(request);
-		var sslCertificateHTML = document.getElementById("sslCertificate");
-		// console.log(sslCertificateHTML);
-		if (request != null && request.sslCertificate != null) {
-			sslCertificateHTML.innerText = request.sslCertificate;
-		} else {
-			// error handling
-			sslCertificateHTML.innerText = "SSL Certificate Status: N/A";
-		}
-    }
 
-	if (request.subject=="cookieList"){
-		advSet= request.data.advSet;
-		trackSet= request.data.trackSet;
-		socSet= request.data.socSet;
-		console.log(advSet, socSet, trackSet);
-		
-		var advHTML = document.getElementById('advSet');
-		var socHTML = document.getElementById('socSet');
-		var trackHTML = document.getElementById('trackSet');
-
-		console.log(advHTML);
-
-		advHTML.innerText = advSet;
-		socHTML.innerText = socSet;
-		trackHTML.innerText = trackSet;
-	}
-
-	if (request.subject == "urlAssociations"){
-		/* Fill the URL rating from Content.js' URL information */ 
-		// var urlElement = document.getElementById("urlElement");
-		var urlRatingElement = document.getElementById("urlRatingElement");
-		
-		urlRatingData = request.urlRatingData; // Global
-		urlRatingElement.innerText = "URL Rating: " + urlRatingData;
-	}
+	fillSSL(request);
+	fillTrackers(request);
+	fillURLRating(request);
 
 });
 
