@@ -19,6 +19,9 @@ var urlRatingData = null;
 var masterHost;
 var masterHref;
 
+
+/* Onclick Behavior for the thumbs up & thumbs down */
+
 function thumbs(){
 	document.getElementById("thumbsUp").onclick = function() {
 		// PATCH Request 
@@ -48,6 +51,7 @@ function thumbs(){
 	}
 }
 
+/* Filling HTML divs from content.js */
 
 /* fillHTTPStatus:
  * @description: takes the data diven from consent.js and uses that data to write to popup.html's
@@ -71,6 +75,10 @@ function fillHTTPStatus(response) {
 	}
 }
 
+
+
+
+/* Filling HTML divs from popup.js */
 /* fillUrlHaus:
  * @description: takes the data diven from consent.js and uses that data to write to popup.html's
  *					urlHaus div
@@ -79,7 +87,6 @@ function fillHTTPStatus(response) {
  */
 function fillUrlHaus(threat) {
 	var urlHausHtml = document.getElementById("urlHaus");
-	// console.log(urlHausHtml);
 	if (threat != null) {
 		urlHausHtml.innerText = threat;
 	} else {
@@ -215,6 +222,7 @@ chrome.runtime.onMessage.addListener( function(message,sender,sendResponse)
 				// TODO
 		}
 	}
+	return true;
 
 });
 
