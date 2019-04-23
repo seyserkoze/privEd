@@ -29290,7 +29290,7 @@ function checkURLHaus(url){
 function getURLAssociations(requestURL){
     $.get(requestURL, function( data ) {
           var urlRatingData = data.rating;
-          chrome.runtime.sendMessage({subject: 'urlAssociations', urlRatingData: urlRatingData}, function(){});
+          chrome.runtime.sendMessage({subject: 'urlRating', urlRatingData: urlRatingData}, function(){});
           });
 }
 
@@ -29455,7 +29455,7 @@ chrome.runtime.onMessage.addListener(
 
         if (request.subject=="backgroundReq"){
             var url_check = '"'+request.href+'"';
-            
+
             tabDomain = request.hostname.toString();
             var wwwIndex = tabDomain.indexOf('www.');  
             if (wwwIndex>-1){
