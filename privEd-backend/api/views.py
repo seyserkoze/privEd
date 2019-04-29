@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
-from .models import URLAssociations
+from .models import *
 from rest_framework.views import APIView
 from .serializers import *
 from rest_framework.response import Response
@@ -23,3 +23,22 @@ class URLView(viewsets.ModelViewSet):
 			new_rating.save()
 			serializer = URLSerializer(new_rating)
 		return Response(serializer.data)
+
+
+
+class RegisterView(APIView):
+
+	def post(self, request, format='json'):
+
+		email = request.data['email']
+		identity = request.data['id']
+
+		print (email, identity)
+
+		if (not User.objects.filter(identity=identity).exists()):
+			new_user = User.objects.create(identity=identity, email=email)
+			new_user.save()
+
+			return Response({'message': 'user created'}, status=status.HTTP_200_OK)
+
+		return Response({'message': 'user already exists'}, status= status.HTTP_200_OK)

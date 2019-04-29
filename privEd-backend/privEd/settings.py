@@ -25,7 +25,7 @@ SECRET_KEY = 'ad$pt8&d%!t(q_2siw$4o0n2@sjj&9_$x*v+sh^1pk$^70e&l^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['128.237.201.249', 'patricks-mbp.wv.cc.cmu.edu']
+ALLOWED_HOSTS = ['128.237.134.25', 'localhost','patricks-mbp.wv.cc.cmu.edu']
 
 
 # Application definition

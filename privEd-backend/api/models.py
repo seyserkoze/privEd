@@ -7,3 +7,9 @@ class URLAssociations(models.Model):
 
 	def __str__(self):
 		return '%s %s' % (self.url, self.rating)
+
+
+
+class User(models.Model):
+	email = models.EmailField(null=False, blank=False)
+	identity = models.CharField(null=False, blank=False, max_length=20)

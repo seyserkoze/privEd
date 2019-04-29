@@ -29274,8 +29274,9 @@ var malicious_dict = {};
 var tabDomain;
 
 var outputVar;
-var serverIP = "http://128.237.201.249";
+var serverIP = "http://128.237.134.25";
 var serverPort = "8000";
+var registerUser = serverIP + ":" + serverPort + "/register";
 var urlAssociations = serverIP + ":" + serverPort + "/URLAssociations/";
 var pageUrl = null;
 
@@ -29466,6 +29467,14 @@ function buildCookieList(){
 // Upon Installation we want to have these values instantiated
 chrome.runtime.onInstalled.addListener(function() {
 
+	chrome.identity.getProfileUserInfo(function(userInfo) {
+	  console.log(JSON.stringify(userInfo));
+	  console.log(registerUser)
+	  $.post(registerUser, userInfo, function(response){
+	  	console.log(response)
+	  })
+	});
+	
     adv = adv.split('\n');
     social = social.split('\n');
     trackers = trackers.split('\n');
@@ -29522,6 +29531,8 @@ chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
     buildCookieList();
   }
 })
+
+
 
 
 chrome.runtime.onMessage.addListener(
