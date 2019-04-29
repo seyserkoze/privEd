@@ -19,7 +19,4 @@ class Website(models.Model):
 class User(models.Model):
 	email = models.EmailField(null=False, blank=False)
 	identity = models.CharField(null=False, blank=False, max_length=20, primary_key=True)
-
-
-
-
+	history = models.ManyToManyField(Website, blank=True, null=True)
