@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from .models import URLAssociations
+from .models import Website
 from rest_framework.validators import UniqueValidator
 
 
 class URLSerializer(serializers.ModelSerializer):
 	class Meta:
-		model = URLAssociations
-		fields = "__all__"
+		model = Website
+		fields = ('url', 'rating')

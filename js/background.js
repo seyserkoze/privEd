@@ -29387,7 +29387,7 @@ function buildThirdPartyCookies(cookies){
     return thirdPartySet;
 }
 
-function segmentSet(cookieSet, sendResponse){
+function segmentSet(cookieSet){
 
     var advSet=[];
     var socSet=[];
@@ -29509,6 +29509,7 @@ chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
   if (changeInfo.status == 'complete' && tab.active) {
 
     var url = new URL(tab.url);
+    console.log(url)
     masterHost = url.hostname;
     protocol = url.protocol;
     masterHref = url.href;
@@ -29521,7 +29522,22 @@ chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
         tabDomain = tabDomain.substring(wwwIndex+4, tabDomain.length);
     }
 
-    pageUrl = masterHost.replace(/\./g, "");
+    // pageUrl = masterHost.replace(/\./g, "");
+    var www = masterHost.indexOf('www.')
+    console.log(www)
+    var start;
+
+    if (www!=-1){
+    	start = 4;
+    }
+    else {
+    	start = 0;
+    }
+
+    console.log(start)
+
+    pageUrl = masterHost.substring(start, masterHost.length)
+    pageUrl = pageUrl.substring(0, pageUrl.indexOf('.'))
     var requestURL = urlAssociations + pageUrl + "/";
 
     checkProtocol(protocol);

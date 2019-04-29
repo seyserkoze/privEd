@@ -10,7 +10,7 @@
 var advSet;
 var socSet;
 var trackSet;
-var serverIP = "http://128.237.201.249";
+var serverIP = "http://128.237.134.25";
 var serverPort = "8000";
 var urlAssociations = serverIP + ":" + serverPort + "/URLAssociations/";
 
@@ -107,6 +107,7 @@ function fillUrlHaus(threat) {
  * @output: void
  */
 function fillTrackers(trackingData) {
+	console.log(trackingData)
 	advSet = trackingData.advSet;
 	trackSet = trackingData.trackSet;
 	socSet = trackingData.socSet;
@@ -168,7 +169,8 @@ function fillTrackers(trackingData) {
  */
 function fillSSLStatus(sslCertificate){	
 	var sslCertificateHTML = document.getElementById("sslCertificate");
-	// console.log(sslCertificateHTML);
+	console.log(sslCertificate);
+
 	if (sslCertificate != null) {
 		sslCertificateHTML.innerText = sslCertificate;
 	} else {

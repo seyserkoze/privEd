@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import URLAssociations
+from .models import *
 
 
-admin.site.register(URLAssociations)
+admin.site.register(Website)
+admin.site.register(User)
+admin.site.register(Tracker)
