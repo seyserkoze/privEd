@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
+from django.core import serializers as serial
 
 class URLView(viewsets.ModelViewSet):
 	queryset = Website.objects.all()
@@ -49,6 +50,59 @@ class RegisterView(APIView):
 class UserView(viewsets.ModelViewSet):
 	queryset= User.objects.all()
 	serializer_class = UserSerializer
+
+
+	def list(self, request):
+		queryset = self.filter_queryset(self.get_queryset())
+		serializer = self.get_serializer(queryset, many=True)
+		response_list = serializer.data 
+
+		for user in response_list:
+			history = user['history']
+			print(history)
+
+			for i in range(0, len(history)):
+				website = history[i]
+				website_obj = Website.objects.get(url=website)
+				website_dict = {}
+				trackers = website_obj.trackers.all()
+				tracker_list = []
+
+				for tracker in trackers:
+
+					tracker_list.append(tracker.__str__())
+
+				website_dict[website]=tracker_list
+				history[i] = website_dict
+
+		return Response(response_list, status=status.HTTP_200_OK)
+
+
+	def retrieve(self, request, pk=None):
+		reqUser = User.objects.get(identity=pk)
+		serializer = UserSerializer(reqUser)
+		response = serializer.data
+
+		history = response['history']
+		print(history)
+
+		for i in range(0, len(history)):
+			website = history[i]
+			website_obj = Website.objects.get(url=website)
+			website_dict = {}
+			trackers = website_obj.trackers.all()
+			tracker_list = []
+
+			for tracker in trackers:
+
+				tracker_list.append(tracker.__str__())
+
+			website_dict[website]=tracker_list
+			history[i] = website_dict
+		return Response(response, status=status.HTTP_200_OK)
+
+
+
 
 class VisitView(APIView):
 
@@ -110,11 +164,12 @@ class VisitView(APIView):
 
 
 @csrf_exempt
-def history(request):
+def history(request, slug):
+	context = {}
+	identity = slug
+	context['identity'] = identity
+	
+	
 
-	if (request.method=="POST"):
-		print(request.POST)
-		print("done")
-		identity = request.POST['identity']
 
-	return render(request, 'graph.html', {"identity": identity})
+	return render(request, 'graph.html', context)

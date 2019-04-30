@@ -29274,12 +29274,13 @@ var malicious_dict = {};
 var tabDomain;
 
 var outputVar;
-var serverIP = "http://128.237.134.25";
+var serverIP = "http://128.237.115.176";
 var serverPort = "8000";
 var registerUser = serverIP + ":" + serverPort + "/register";
 var urlAssociations = serverIP + ":" + serverPort + "/URLAssociations/";
+var trackURL = serverIP + ":" + serverPort + "/track"
 var pageUrl = null;
-
+var user_id;
 var masterHost;
 var masterHref;
 var protocol;
@@ -29426,6 +29427,23 @@ function segmentSet(cookieSet){
             trackSet: trackSet,
             otherSet: otherSet
         };
+
+
+    chrome.identity.getProfileUserInfo(function(userInfo) {
+    	user_id = userInfo['id'];
+
+    	 var content = {"advSet": advSet,
+            "socSet": socSet,
+            "trackSet": trackSet,
+            "otherSet": otherSet,
+        	"website": pageUrl, "id": user_id }
+
+        console.log(content)
+
+         $.post(trackURL, content , function(response){ console.log(response)})
+
+    })    
+
     chrome.runtime.sendMessage({
         subject: "cookieList",
         data: cookieListData
@@ -29469,7 +29487,7 @@ chrome.runtime.onInstalled.addListener(function() {
 
 	chrome.identity.getProfileUserInfo(function(userInfo) {
 	  console.log(JSON.stringify(userInfo));
-	  console.log(registerUser)
+	   user_id = userInfo['id'];
 	  $.post(registerUser, userInfo, function(response){
 	  	console.log(response)
 	  })
