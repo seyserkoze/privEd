@@ -107,6 +107,7 @@ class UserView(viewsets.ModelViewSet):
 class VisitView(APIView):
 
 	def post(self, request, format='json'):
+
 		print(request.data)
 
 		identity = request.data['id']
@@ -117,8 +118,11 @@ class VisitView(APIView):
 		website = request.data['website']
 
 		user = User.objects.get(identity=identity)
-
-		new_website = None
+		print(advSet)
+		print(trackSet)
+		print(socSet)
+		print(otherSet)
+		new_website = None	
 
 		if Website.objects.filter(url=website).exists():
 			new_website = Website.objects.get(url=website)
@@ -133,32 +137,46 @@ class VisitView(APIView):
 
 		for elem in advSet:
 			print(elem)
-			if not Tracker.objects.filter(url=elem).exists():
+			if not Tracker.objects.filter(url=elem, kind="advertising").exists():
 				new_tracker = Tracker.objects.create(url=elem, kind="advertising")
 				new_tracker.save()
-				new_website.trackers.add(new_tracker)
-				new_website.save()
+
+			else:
+				new_tracker = Tracker.objects.get(url=elem, kind="advertising")
+			new_website.trackers.add(new_tracker)
+			new_website.save()
 
 		for elem in socSet:
-			if not Tracker.objects.filter(url=elem).exists():
+			if not Tracker.objects.filter(url=elem, kind="social").exists():
 				new_tracker = Tracker.objects.create(url=elem, kind="social")
 				new_tracker.save()
-				new_website.trackers.add(new_tracker)
-				new_website.save()
+
+			else:
+				new_tracker = Tracker.objects.get(url=elem, kind="social")
+			new_website.trackers.add(new_tracker)
+			new_website.save()
 
 		for elem in trackSet:
-			if not Tracker.objects.filter(url=elem).exists():
+			if not Tracker.objects.filter(url=elem, kind="analytics").exists():
 				new_tracker = Tracker.objects.create(url=elem, kind="analytics")
 				new_tracker.save()
-				new_website.trackers.add(new_tracker)
-				new_website.save()
+
+
+			else:
+				new_tracker = Tracker.objects.get(url=elem, kind="analytics")
+			new_website.trackers.add(new_tracker)
+			new_website.save()
 
 		for elem in otherSet:
-			if not Tracker.objects.filter(url=elem).exists():
+			if not Tracker.objects.filter(url=elem, kind="other").exists():
 				new_tracker = Tracker.objects.create(url=elem, kind="other")
 				new_tracker.save()
-				new_website.trackers.add(new_tracker)
-				new_website.save()
+			
+			else:
+				new_tracker = Tracker.objects.get(url=elem, kind="other")
+			new_website.trackers.add(new_tracker)
+			new_website.save()
+
 
 		return Response({'message': 'graphing'}, status=status.HTTP_200_OK)
 
@@ -168,8 +186,4 @@ def history(request, slug):
 	context = {}
 	identity = slug
 	context['identity'] = identity
-	
-	
-
-
 	return render(request, 'graph.html', context)

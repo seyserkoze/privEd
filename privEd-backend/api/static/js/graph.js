@@ -1,12 +1,15 @@
 
 
-var colorMap = {advertising: '#D9E5D6', social: '#EDDEA4', analytics: '#F7A072', other: '#FF9B42'}
+var colorMap = {advertising: 'rgba(255, 206, 86, 1)', social: 'rgba(255, 99, 132, 1)', analytics:'rgba(54, 162, 235, 1)', other: 'rgba(206, 255, 112, 1)'}
+
+var trackerMap = {}
 
 function buildNodeList(userHistory){
 
-	var resultList = []
-	var uid = 0
-	var webFont = {color: 'black', size: 20, face: 'helvetica'}
+	var resultList = [];
+	var edgeList = [];
+	var uid = 0;
+	var webFont = {color: 'black', size: 20, face: 'roboto'};
 	for (var i in userHistory){
 
 		website = (userHistory[i])
@@ -14,29 +17,47 @@ function buildNodeList(userHistory){
 		for (var key in website) {
 		    if (website.hasOwnProperty(key)) {
 
-		    	resultList.push({id: uid, label: key, color: '#0FA3B1', boderWidth: 0, font: webFont, shape: 'circle'})
+		    	resultList.push({id: uid, label: key, color: '#FFF1D0', boderWidth: 0, font: webFont, shape: 'circle'})
+		    	var webUID = uid;
 		    	uid += 1;
 		        trackers = website[key];
 
-		        for (var j in trackers){
+				for (var j in trackers){
+
+					var curr_tracker = trackers[j]
+					var curr_tracker_url = trackers[j].split(" ")[0]
+					var curr_tracker_kind = trackers[j].split(" ")[1]
+
+					
+					if (trackerMap[curr_tracker]){
+						var curr_uid = trackerMap[curr_tracker];
+		        		edgeList.push({from: webUID, to: curr_uid})
+					}
 		        	
-		        	var curr_tracker = trackers[j]
-		        	var curr_tracker_url = trackers[j].split(" ")[0]
-		        	var curr_tracker_kind = trackers[j].split(" ")[1]
-		        	resultList.push({id: uid, label: curr_tracker_url, color: colorMap[curr_tracker_kind], shape: 'box'});
-		        	uid += 1
+		        	else {
+		        		resultList.push({id: uid, label: curr_tracker_url, color: colorMap[curr_tracker_kind], shape: 'box'});
+						trackerMap[curr_tracker] = uid;
+						// console.log(trackerMap)
+						edgeList.push({from: webUID, to: uid});
+					 	uid += 1;
+
+		        		
+		        	}
 		        }
 			}
 		}
 	}
 
-	return resultList;
+
+	return [resultList, edgeList];
 }
 
 window.onload=function(){
 	var graphHtml = document.getElementById("graph");
 	var id = document.getElementById("user").innerText;
 	var url = 'http://128.237.115.176:8000/Users/'+id;
+	
+
 	$.get(url, {}, function(response){
 		var userInfo = response;
 		var userId = response['identity'];
@@ -46,17 +67,15 @@ window.onload=function(){
 
 		console.log(userHistory)
 
+		document.getElementById("user").innerText= userEmail + "'s Third Party Tracker Data" 
+
 
 		var currList = buildNodeList(userHistory)
-		var nodes = new vis.DataSet(currList);
+
+		var nodes = new vis.DataSet(currList[0]);
 
 		    // create an array with edges
-		    var edges = new vis.DataSet([
-		        {from: 1, to: 3},
-		        {from: 1, to: 2},
-		        {from: 2, to: 4},
-		        {from: 2, to: 5}
-		    ]);
+		    var edges = new vis.DataSet(currList[1]);
 
 		    // create a network
 		    var container = document.getElementById('mynetwork');

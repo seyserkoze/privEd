@@ -29420,13 +29420,14 @@ function segmentSet(cookieSet){
         }
     }
 
-    console.log("sending trackers")
+    
     cookieListData = {
             advSet: advSet,
             socSet: socSet,
             trackSet: trackSet,
             otherSet: otherSet
         };
+
 
 
     chrome.identity.getProfileUserInfo(function(userInfo) {
@@ -29438,12 +29439,16 @@ function segmentSet(cookieSet){
             "otherSet": otherSet,
         	"website": pageUrl, "id": user_id }
 
+        console.log("sending trackers to backend")
         console.log(content)
+
 
          $.post(trackURL, content , function(response){ console.log(response)})
 
     })    
 
+    console.log("sending trackers to popup")
+    console.log(cookieListData)
     chrome.runtime.sendMessage({
         subject: "cookieList",
         data: cookieListData
@@ -29470,9 +29475,6 @@ function buildCookieList(){
           ).values()
         ];
 
-        console.log("cookies are ")
-        console.log(cookies)
-
         // do something with the cookies here
         var thirdPartySet = buildThirdPartyCookies(cookies);
 
@@ -29486,10 +29488,10 @@ function buildCookieList(){
 chrome.runtime.onInstalled.addListener(function() {
 
 	chrome.identity.getProfileUserInfo(function(userInfo) {
-	  console.log(JSON.stringify(userInfo));
+
 	   user_id = userInfo['id'];
 	  $.post(registerUser, userInfo, function(response){
-	  	console.log(response)
+
 	  })
 	});
 	
